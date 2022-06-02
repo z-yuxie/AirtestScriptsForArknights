@@ -7,8 +7,8 @@ import json
 auto_setup(__file__)
 
 # ----- 脚本运行模式 -----
-# 当前使用机型（仅单选） 支持：'mumu1440x810' 'p40pro'
-mobileType = 'p40pro'
+# 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro'
+mobileType = 'Mate40Pro'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔')
 useAgents = ('时装山', '羽毛笔')
 
@@ -497,7 +497,7 @@ def settlementExplorationIncome():
 
 # 当前脚本支持的手机设备的坐标配置信息集
 supportMobilePositionConfigs = {
-    'p40pro': {
+    'Mate40Pro': {
         '基础位置配置': {
             '屏幕中心点': (1160,850),
             '右滑屏幕起始点': (1150,500),
