@@ -584,40 +584,13 @@ supportMobilePositionConfigs = {
 # 当前脚本支持的干员的列表
 scriptSupportAgents = {
     '时装山': NeedOpenSkillAgent(
-        '山',
-        Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152)),
-        Template(r"tpl1653816148085.png", record_pos=(0.228, -0.098), resolution=(2376, 1152)),
-        Template(r"tpl1649332188667.png", record_pos=(0.051, -0.149), resolution=(1440, 810)),
-        Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)),
-        Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)),
-        Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)),
-        0,
-        Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)),
-        Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
+        '山', Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152)), Template(r"tpl1653816148085.png", record_pos=(0.228, -0.098), resolution=(2376, 1152)), Template(r"tpl1649332188667.png", record_pos=(0.051, -0.149), resolution=(1440, 810)), Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)), Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
     ),
     '山': NeedOpenSkillAgent(
-        '山',
-        Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152)),
-        Template(r"tpl1653816234035.png", record_pos=(0.232, 0.025), resolution=(2376, 1152)),
-        Template(r"tpl1654180427509.png", record_pos=(0.028, -0.119), resolution=(2376, 1152)),
-        Template(r"tpl1654180517936.png", record_pos=(-0.257, -0.116), resolution=(2376, 1152)),
-        Template(r"tpl1654180552783.png", record_pos=(-0.147, -0.143), resolution=(2376, 1152)),
-        Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)),
-        0,
-        Template(r"tpl1654180691569.png", record_pos=(0.466, 0.196), resolution=(2376, 1152)),
-        Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
+        '山', Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152)), Template(r"tpl1653816234035.png", record_pos=(0.232, 0.025), resolution=(2376, 1152)), Template(r"tpl1654180427509.png", record_pos=(0.028, -0.119), resolution=(2376, 1152)), Template(r"tpl1654180517936.png", record_pos=(-0.257, -0.116), resolution=(2376, 1152)), Template(r"tpl1654180552783.png", record_pos=(-0.147, -0.143), resolution=(2376, 1152)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1654180691569.png", record_pos=(0.466, 0.196), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
     ),
     '羽毛笔': Agent(
-        '羽毛笔',
-        Template(r"tpl1653668706429.png", record_pos=(0.171, 0.152), resolution=(2376, 1152)),
-        Template(r"tpl1653816104224.png", record_pos=(-0.359, -0.099), resolution=(2376, 1152)),
-        Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152)),
-        Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152)),
-        Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152)),
-        None,
-        5,
-        Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152)),
-        None
+        '羽毛笔', Template(r"tpl1653668706429.png", record_pos=(0.171, 0.152), resolution=(2376, 1152)), Template(r"tpl1653816104224.png", record_pos=(-0.359, -0.099), resolution=(2376, 1152)), Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152)), Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152)), Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152)), None, 5, Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152)), None
     )
 }
 
