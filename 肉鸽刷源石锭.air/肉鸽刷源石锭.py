@@ -264,7 +264,8 @@ class StoreStrategy(Strategy):
         touch(Template(r"tpl1653121619235.png", record_pos=(0.414, 0.082), resolution=(2242, 1080)))
         sleep(1.0)
         # 不可以投资时直接离开
-        if not self.bankingSystemExist() or self.accountFull():
+#         if not self.bankingSystemExist() or self.accountFull():
+        if not self.bankingSystemExist():
             self.exitStore()
             return True
         self.openBankingSystem()
