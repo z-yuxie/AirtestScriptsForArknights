@@ -201,6 +201,7 @@ class BattleStrategy(Strategy):
         # 识别到了点击一下
         while exists(Template(r"tpl1641989217172.png", record_pos=(-0.366, 0.15), resolution=(1440, 810))):
             touch(basePositions['屏幕中心点'])
+            sleep(1)
         sleep(1.0)
         
         
@@ -333,9 +334,6 @@ class StoreStrategy(Strategy):
 
 # 确认进行探索
 def confirmExploration(basePositions):
-    while not exists(Template(r"tpl1646224294375.png", threshold=0.9000000000000001, record_pos=(0.405, 0.191), resolution=(1440, 810))):
-        touch(basePositions['屏幕中心点'])
-    sleep(1.0)
     touch(Template(r"tpl1646224294375.png", threshold=0.9000000000000001, record_pos=(0.405, 0.191), resolution=(1440, 810)))
     sleep(1.5)
 
@@ -500,19 +498,25 @@ def exitExploration(basePositions):
 # 结算探索收益
 def settlementExplorationIncome():
     sleep(3.0)
+    while not exists(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080))):
+        sleep(1)
     touch(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080)))
     sleep(6.0)
     while not exists(Template(r"tpl1653122941343.png", record_pos=(0.02, 0.192), resolution=(2242, 1080))):
         sleep(1.0)
-    touch(Template(r"tpl1653122941343.png", record_pos=(0.02, 0.192), resolution=(2242, 1080)))
-    while not exists(Template(r"tpl1653121996733.png", record_pos=(0.016, 0.192), resolution=(2242, 1080))):
+    while exists(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152))):
+        tryTouch(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152)))
         sleep(1.0)
-    touch(Template(r"tpl1653121996733.png", record_pos=(0.016, 0.192), resolution=(2242, 1080)))
     sleep(3.0)
-    tryTouch(Template(r"tpl1646104849842.png", threshold=0.9000000000000001, record_pos=(0.001, -0.204), resolution=(1440, 810)))
+    while exists(Template(r"tpl1646104849842.png", threshold=0.9000000000000001, record_pos=(0.001, -0.204), resolution=(1440, 810))):
+        tryTouch(Template(r"tpl1646104849842.png", threshold=0.9000000000000001, record_pos=(0.001, -0.204), resolution=(1440, 810)))
+        sleep(1.0)
     sleep(1.0)
     while exists(Template(r"tpl1653450900687.png", record_pos=(0.423, 0.158), resolution=(2376, 1152))):
         sleep(60)
+    while not exists(Template(r"tpl1646224294375.png", threshold=0.9000000000000001, record_pos=(0.405, 0.191), resolution=(1440, 810))):
+        touch(basePositions['屏幕中心点'])
+        sleep(1)
 
 # ----- 脚本运行配置 -----
 
