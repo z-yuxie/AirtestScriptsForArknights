@@ -198,8 +198,11 @@ class BattleStrategy(Strategy):
     # 处理挑战成功后的战斗结算
     def processPass(self, basePositions):
         sleep(4.0)
-        touch(basePositions['屏幕中心点'])#识别到了点击一下
+        # 识别到了点击一下
+        while exists(Template(r"tpl1641989217172.png", record_pos=(-0.366, 0.15), resolution=(1440, 810))):
+            touch(basePositions['屏幕中心点'])
         sleep(1.0)
+        
         
         while exists(Template(r"tpl1653115016616.png", record_pos=(-0.354, 0.015), resolution=(2242, 1080))):
             touch(basePositions['关卡奖励列表的第一个接受按钮'])
@@ -458,7 +461,15 @@ def chooseLevel(levelButtonPositions):
 
 # 查找闯关攻略
 def findStrategy():
+    # 由于airtest的图片识别偶尔抽风，所以增加二次确认
+    reCheckList = []
     for strategy in strategies:
+        if not strategy.itsMyTime():
+            continue
+        reCheckList.append(strategy)
+    if len(reCheckList) == 1:
+        return reCheckList[0]
+    for strategy in reCheckList:
         if not strategy.itsMyTime():
             continue
         return strategy
@@ -474,20 +485,29 @@ def tryChallenge(strategy, agent, mobilePositionConfig):
     return strategy.challenge(agent, mobilePositionConfig['基础位置配置'], targetPositions)
 
 # 退出本轮探索
-def exitExploration():
-    tryTouch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
-    sleep(1.0)
- # 结算探索收益
+def exitExploration(basePositions):
+    while not exists(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152))):
+        sleep(1)
+    touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
+    while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
+        touch(basePositions['屏幕中心点'])
+        sleep(1.0)
+    touch(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
+    while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
+        sleep(1.0)
+    touch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
+
+# 结算探索收益
 def settlementExplorationIncome():
-    tryTouch(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
-    sleep(1.0)
-    tryTouch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
     sleep(3.0)
     touch(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080)))
     sleep(6.0)
-    tryTouch(Template(r"tpl1653122941343.png", record_pos=(0.02, 0.192), resolution=(2242, 1080)))
-    sleep(3.0)
-    tryTouch(Template(r"tpl1653121996733.png", record_pos=(0.016, 0.192), resolution=(2242, 1080)))
+    while not exists(Template(r"tpl1653122941343.png", record_pos=(0.02, 0.192), resolution=(2242, 1080))):
+        sleep(1.0)
+    touch(Template(r"tpl1653122941343.png", record_pos=(0.02, 0.192), resolution=(2242, 1080)))
+    while not exists(Template(r"tpl1653121996733.png", record_pos=(0.016, 0.192), resolution=(2242, 1080))):
+        sleep(1.0)
+    touch(Template(r"tpl1653121996733.png", record_pos=(0.016, 0.192), resolution=(2242, 1080)))
     sleep(3.0)
     tryTouch(Template(r"tpl1646104849842.png", threshold=0.9000000000000001, record_pos=(0.001, -0.204), resolution=(1440, 810)))
     sleep(1.0)
@@ -628,6 +648,7 @@ if __name__ == "__main__":
         confirmEnterCastle()
         # 将勇士加入探索编队
         organizeIntoTeams(warrior, mobilePositionConfig['基础位置配置'])
+        success = False
         # 不断挑战本轮探索内的关卡, 直到关底或者攻略关卡失败
         while(True):
             # 点击选中本次挑战关卡
@@ -639,8 +660,9 @@ if __name__ == "__main__":
             # 是否挑战失败或已经挑战到关底
             if not success or strategy.isLastTargetStrategy():
                 break
-        # 退出本轮探索
-        exitExploration()
+        if success:
+            # 退出本轮探索
+            exitExploration(mobilePositionConfig['基础位置配置'])
         # 结束本轮探索并结算本轮探索收益
         settlementExplorationIncome()
 
