@@ -191,7 +191,10 @@ class BattleStrategy(Strategy):
         while not exists(Template(r"tpl1641989217172.png", record_pos=(-0.366, 0.15), resolution=(1440, 810))):
             # 检查失败标记
             if exists(Template(r"tpl1653546770088.png", record_pos=(-0.096, -0.028), resolution=(2376, 1152))):
-                return False
+                sleep(1)
+                # 二次确认
+                if exists(Template(r"tpl1653546770088.png", record_pos=(-0.096, -0.028), resolution=(2376, 1152))):
+                    return False
             sleep(4.0)
         return True
 
