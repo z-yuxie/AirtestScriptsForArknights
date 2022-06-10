@@ -10,12 +10,13 @@ auto_setup(__file__)
 # 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro'
 mobileType = 'Mate40Pro'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔')
-useAgents = ('时装山', '羽毛笔')
+useAgents = ('羽毛笔','山')
 
 
 # ----- 通用的一些操作 -----
-
+# 竖屏时的宽 y轴
 width = G.DEVICE.display_info['width']
+# 竖屏时的高 x轴
 height = G.DEVICE.display_info['height']
 
 # 1秒内尝试点击一个图片，没有找到图片就不点击
@@ -65,7 +66,7 @@ class Agent:
     def answer(self):
         touch(self.enlistMark)
         sleep(1.0)
-        touch(Template(r"tpl1653112348652.png", record_pos=(0.419, 0.211), resolution=(2242, 1080)))
+        touch(Template(r"tpl1654876633543.png", record_pos=(0.42, 0.204), resolution=(2376, 1152)))
         sleep(3.0)
     
     # 结束立绘展示
@@ -271,8 +272,8 @@ class StoreStrategy(Strategy):
         touch(Template(r"tpl1653121619235.png", record_pos=(0.414, 0.082), resolution=(2242, 1080)))
         sleep(1.0)
         # 不可以投资时直接离开
-#         if not self.bankingSystemExist() or self.accountFull():
-        if not self.bankingSystemExist():
+        if not self.bankingSystemExist() or self.accountFull():
+#         if not self.bankingSystemExist():
             self.exitStore()
             return True
         self.openBankingSystem()
@@ -305,7 +306,7 @@ class StoreStrategy(Strategy):
 
     # 投资账户已满
     def accountFull(self):
-        return exists(Template(r"tpl1653641810710.png", record_pos=(-0.075, -0.082), resolution=(2376, 1152)))
+        return exists(Template(r"tpl1654878339979.png", record_pos=(-0.074, -0.069), resolution=(2376, 1152)))
     
     # 投资账户已满，停止投资
     def accountFullNeedStopInvestment(self):
@@ -375,6 +376,7 @@ def chooseSaberAgent(agents, swipeAgentListStartPosition):
     #点击近卫招募券
     touch(Template(r"tpl1653112240088.png", record_pos=(-0.175, 0.012), resolution=(2242, 1080)))
     sleep(1.0)
+#     agent = tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition)
     agent = tryEnlistAgent(agents, swipeAgentListStartPosition)
     if not agent:
         agent = tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition)
@@ -406,21 +408,16 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
                 agentPosition = agent.canBorrow()
                 if not agentPosition:
                     break
-                # 80一步
-                for k in range(7):
-                    x = agentPosition[0] + ( k + 1) * 80
-                    if x > width:
-                        break
-                    touch((x, agentPosition[1]))
-                    # 判断是否进入到招募助战页
-                    if exists(Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152))):
-                        # 点击招募助战按钮
-                        touch(Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152)))
-                        agent.showDown()
-                        return agent
-                    # 如果不使用continue进入下一轮循环，会导致swipe2Right被认为是k这个循环内的代码（很奇怪为啥会这样），而被不合时宜的执行
-                    else:
-                        continue
+                touch(agentPosition)
+                # 判断是否进入到招募助战页
+                if exists(Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152))):
+                    # 点击招募助战按钮
+                    touch(Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152)))
+                    agent.showDown()
+                    return agent
+                # 如果不使用continue进入下一轮循环，会导致swipe2Right被认为是k这个循环内的代码（很奇怪为啥会这样），而被不合时宜的执行
+                else:
+                    continue
                 
                 # 没点到助战按钮，说明按钮在屏幕外边
                 swipe2Right(swipeAgentListStartPosition)
@@ -614,13 +611,13 @@ supportMobilePositionConfigs = {
 # 当前脚本支持的干员的列表
 scriptSupportAgents = {
     '时装山': NeedOpenSkillAgent(
-        '山', Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152)), Template(r"tpl1653816148085.png", record_pos=(0.228, -0.098), resolution=(2376, 1152)), Template(r"tpl1649332188667.png", record_pos=(0.051, -0.149), resolution=(1440, 810)), Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)), Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
+        '山', Template(r"tpl1654876740282.png", record_pos=(-0.149, 0.035), resolution=(2376, 1152)), Template(r"tpl1654877639494.png", record_pos=(-0.013, 0.009), resolution=(2376, 1152)), Template(r"tpl1654876084914.png", record_pos=(-0.106, 0.002), resolution=(2376, 1152)), Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)), Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
     ),
     '山': NeedOpenSkillAgent(
-        '山', Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152)), Template(r"tpl1653816234035.png", record_pos=(0.232, 0.025), resolution=(2376, 1152)), Template(r"tpl1654180427509.png", record_pos=(0.028, -0.119), resolution=(2376, 1152)), Template(r"tpl1654180517936.png", record_pos=(-0.257, -0.116), resolution=(2376, 1152)), Template(r"tpl1654180552783.png", record_pos=(-0.147, -0.143), resolution=(2376, 1152)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1654180691569.png", record_pos=(0.466, 0.196), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
+        '山', Template(r"tpl1654877593706.png", record_pos=(-0.15, 0.034), resolution=(2376, 1152)), Template(r"tpl1654877617731.png", record_pos=(-0.206, 0.003), resolution=(2376, 1152)), Template(r"tpl1654180427509.png", record_pos=(0.028, -0.119), resolution=(2376, 1152)), Template(r"tpl1654180517936.png", record_pos=(-0.257, -0.116), resolution=(2376, 1152)), Template(r"tpl1654180552783.png", record_pos=(-0.147, -0.143), resolution=(2376, 1152)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1654180691569.png", record_pos=(0.466, 0.196), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
     ),
     '羽毛笔': Agent(
-        '羽毛笔', Template(r"tpl1653668706429.png", record_pos=(0.171, 0.152), resolution=(2376, 1152)), Template(r"tpl1653816104224.png", record_pos=(-0.359, -0.099), resolution=(2376, 1152)), Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152)), Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152)), Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152)), None, 5, Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152)), None
+        '羽毛笔', Template(r"tpl1654876856644.png", record_pos=(0.354, 0.126), resolution=(2376, 1152)), Template(r"tpl1654881100153.png", record_pos=(0.33, 0.0), resolution=(2376, 1152)), Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152)), Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152)), Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152)), None, 5, Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152)), None
     )
 }
 
@@ -644,7 +641,9 @@ if __name__ == "__main__":
     for agentName in useAgents:
         agent = scriptSupportAgents[agentName]
         agents.append(agent)
-
+        
+#     tryEnlistAgentFromMogul(agents, mobilePositionConfig['基础位置配置']['右滑屏幕起始点'])
+    
     # 死循环，持续挑战不停歇
     while(True):
         # 确认进行探索
