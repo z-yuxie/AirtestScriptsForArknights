@@ -9,8 +9,10 @@ auto_setup(__file__)
 # ----- 脚本运行模式 -----
 # 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro'
 mobileType = 'Mate40Pro'
-# 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔')
-useAgents = ('羽毛笔','山')
+# 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
+useAgents = ('羽毛笔','山',)
+# 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
+onlyAssist = False
 
 
 # ----- 通用的一些操作 -----
@@ -32,7 +34,8 @@ def swipe2Right(startPosition):
 
 
 # ----- 基础类型 -----
-
+# -- 干员类型模板 --
+# 基础干员模板
 class Agent:
     '基础干员-只是一个模板啦-不要直接使用ta'
 
@@ -111,6 +114,7 @@ class Agent:
     def releaseSkill(self, agentPosition):
         return
 
+# 上场后需要开技能的干员
 class NeedOpenSkillAgent(Agent):
     '上场后需要手动开一次技能的干员'
 
@@ -121,7 +125,9 @@ class NeedOpenSkillAgent(Agent):
         touch(agentPosition)
         sleep(1)
         touch(self.skillMark4Release)
-        
+
+# -- 关卡攻略类型模板 --
+# 基础关卡攻略模板
 class Strategy:
     '基础攻略-只是一个模板啦-不要直接使用ta'
 
@@ -156,6 +162,7 @@ class Strategy:
     def isLastTargetStrategy(self):
         return False
 
+# 战斗关卡攻略模板
 class BattleStrategy(Strategy):
     '战斗类型关卡的攻略'
 
@@ -227,7 +234,7 @@ class BattleStrategy(Strategy):
     def processFail(self):
         touch(Template(r"tpl1653546790468.png", record_pos=(-0.001, 0.162), resolution=(2376, 1152)))
 
-
+# 事件关卡攻略模板
 class EventStrategy(Strategy):
     '事件类型关卡攻略'
 
@@ -256,6 +263,7 @@ class EventStrategy(Strategy):
         sleep(3.0)
         return True
 
+# 商店关卡攻略模板
 class StoreStrategy(Strategy):
     '商店类型关卡攻略'
 
@@ -376,10 +384,14 @@ def chooseSaberAgent(agents, swipeAgentListStartPosition):
     #点击近卫招募券
     touch(Template(r"tpl1653112240088.png", record_pos=(-0.175, 0.012), resolution=(2242, 1080)))
     sleep(1.0)
-#     agent = tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition)
-    agent = tryEnlistAgent(agents, swipeAgentListStartPosition)
-    if not agent:
+    # 自己没有干员的情况下，直接进行助战招募
+    if onlyAssist:
         agent = tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition)
+    # 自己有干员的情况下
+    else:
+        agent = tryEnlistAgent(agents, swipeAgentListStartPosition)
+        if not agent:
+            agent = tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition)
     return agent
 
 # 从期望的干员中挑选一个可以实际招募到的干员
@@ -609,6 +621,9 @@ supportMobilePositionConfigs = {
 }
 
 # 当前脚本支持的干员的列表
+# 格式：
+# 干员名称: 干员信息
+# 干员信息格式：干员名称, 招募界面角色标识图, 助战招募界面角色标识图, 立绘标识图, 进队标识图, 进队候选标识图, 选用的技能的标识图, 等待费用的时间(正常情况约0.5秒回1费), 干员在等待上场时的标识, 释放技能时的技能图标
 scriptSupportAgents = {
     '时装山': NeedOpenSkillAgent(
         '山', Template(r"tpl1654876740282.png", record_pos=(-0.149, 0.035), resolution=(2376, 1152)), Template(r"tpl1654877639494.png", record_pos=(-0.013, 0.009), resolution=(2376, 1152)), Template(r"tpl1654876084914.png", record_pos=(-0.106, 0.002), resolution=(2376, 1152)), Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)), Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
@@ -642,6 +657,7 @@ if __name__ == "__main__":
         agent = scriptSupportAgents[agentName]
         agents.append(agent)
         
+    # 调试助战
 #     tryEnlistAgentFromMogul(agents, mobilePositionConfig['基础位置配置']['右滑屏幕起始点'])
     
     # 死循环，持续挑战不停歇
@@ -672,51 +688,3 @@ if __name__ == "__main__":
         # 结束本轮探索并结算本轮探索收益
         settlementExplorationIncome()
 
-# 备用图片截图
-# Template(r"tpl1642255403039.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))
-# Template(r"tpl1642143362809.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))
-# Template(r"tpl1642172966906.png", threshold=0.9000000000000001, record_pos=(0.247, -0.145), resolution=(1440, 810))
-# Template(r"tpl1646312155480.png", threshold=0.9000000000000001, record_pos=(0.244, -0.144), resolution=(1440, 810))
-# Template(r"tpl1646312090035.png", threshold=0.9000000000000001, record_pos=(0.244, -0.144), resolution=(1440, 810))
-# Template(r"tpl1646312230227.png", threshold=0.9000000000000001, record_pos=(0.221, -0.143), resolution=(1440, 810))
-# Template(r"tpl1646313204161.png", record_pos=(0.243, -0.144), resolution=(1440, 810))
-# Template(r"tpl1646313419023.png", threshold=0.9000000000000001, record_pos=(0.243, -0.171), resolution=(1440, 810))
-# Template(r"tpl1646313840911.png", threshold=0.9000000000000001, record_pos=(0.243, -0.172), resolution=(1440, 810))
-# Template(r"tpl1646314000508.png", threshold=0.9000000000000001, record_pos=(0.225, -0.172), resolution=(1440, 810))
-# Template(r"tpl1646316209055.png", threshold=0.9000000000000001, record_pos=(0.243, -0.172), resolution=(1440, 810))]
-# Template(r"tpl1646105756560.png", record_pos=(-0.024, -0.048), resolution=(1440, 810))
-# Template(r"tpl1646064778060.png", threshold=0.9000000000000001, record_pos=(0.047, -0.257), resolution=(1440, 810))
-# Template(r"tpl1646238898976.png", threshold=0.9000000000000001, record_pos=(0.163, 0.083), resolution=(1440, 810))
-# Template(r"tpl1653668706429.png", record_pos=(0.171, 0.152), resolution=(2376, 1152))
-# Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152))
-# Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152))
-# Template(r"tpl1653668939380.png", record_pos=(-0.468, 0.064), resolution=(2376, 1152))
-# Template(r"tpl1653668961454.png", record_pos=(0.352, 0.202), resolution=(2376, 1152))
-# Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152))
-# Template(r"tpl1653728305060.png", record_pos=(-0.169, -0.135), resolution=(2376, 1152))
-# Template(r"tpl1653728345569.png", record_pos=(-0.169, -0.133), resolution=(2376, 1152))
-# Template(r"tpl1653728387510.png", record_pos=(-0.169, -0.135), resolution=(2376, 1152))
-# Template(r"tpl1653738179917.png", record_pos=(0.29, -0.112), resolution=(2376, 1152))
-# Template(r"tpl1653795040229.png", record_pos=(0.384, 0.204), resolution=(2376, 1152))
-# Template(r"tpl1653796258656.png", record_pos=(-0.455, -0.21), resolution=(2376, 1152))
-# Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
-# Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152))
-# Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152))
-# Template(r"tpl1653815759246.png", record_pos=(0.395, -0.212), resolution=(2376, 1152))
-# Template(r"tpl1653816348857.png", record_pos=(0.448, -0.213), resolution=(2376, 1152))
-# Template(r"tpl1653816371992.png", record_pos=(0.439, -0.212), resolution=(2376, 1152))
-# Template(r"tpl1653816104224.png", record_pos=(-0.359, -0.099), resolution=(2376, 1152))
-# Template(r"tpl1653816148085.png", record_pos=(0.228, -0.098), resolution=(2376, 1152))
-
-# Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152))
-# Template(r"tpl1653816406979.png", record_pos=(0.157, 0.103), resolution=(2376, 1152))
-# Template(r"tpl1654180369684.png", record_pos=(-0.089, 0.063), resolution=(2376, 1152))
-# Template(r"tpl1653816192092.png", record_pos=(0.229, 0.03), resolution=(2376, 1152))
-# Template(r"tpl1653816216760.png", record_pos=(0.238, 0.02), resolution=(2376, 1152))
-# Template(r"tpl1653816234035.png", record_pos=(0.232, 0.025), resolution=(2376, 1152))
-# Template(r"tpl1653816234035.png", record_pos=(0.232, 0.025), resolution=(2376, 1152))
-# Template(r"tpl1654180427509.png", record_pos=(0.028, -0.119), resolution=(2376, 1152))
-# Template(r"tpl1654180517936.png", record_pos=(-0.257, -0.116), resolution=(2376, 1152))
-# Template(r"tpl1654180552783.png", record_pos=(-0.147, -0.143), resolution=(2376, 1152))
-# Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152))
-# Template(r"tpl1654180691569.png", record_pos=(0.466, 0.196), resolution=(2376, 1152))
