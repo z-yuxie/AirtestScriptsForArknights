@@ -23,6 +23,7 @@
 ![image](https://user-images.githubusercontent.com/28329410/171689657-3a80a439-d629-4cae-acf1-2fd7001c8120.png)
 ![image](https://user-images.githubusercontent.com/28329410/171689776-d9211f27-1bc6-430c-92c4-28df36cf553d.png)
 
+
 ### 屏幕关键坐标点说明
 + 右滑屏幕起始点
 ![1](https://user-images.githubusercontent.com/28329410/173185902-2633a853-0ddd-40f6-baef-e86148ca3726.png)
@@ -48,4 +49,24 @@
 ![12](https://user-images.githubusercontent.com/28329410/173186031-a056f9c8-68ec-4d44-8209-8ee6a39db479.png)
 ![13](https://user-images.githubusercontent.com/28329410/173186038-13cd470e-da54-478a-b2ae-c882088d0725.png)
 
+
+### 干员配置说明
++ 招募界面角色标识图
+![image](https://user-images.githubusercontent.com/28329410/173186330-05fed9bf-500d-4743-94f5-088a6d480dc0.png)
++ 助战招募界面角色标识图
+![image](https://user-images.githubusercontent.com/28329410/173186374-40f67803-6c31-4916-a794-42d275c63696.png)
++ 立绘标识图
+![image](https://user-images.githubusercontent.com/28329410/173186401-c8680623-8e13-46b8-8867-1b1db02860ae.png)
++ 进队标识图
+![image](https://user-images.githubusercontent.com/28329410/173186441-65e958d1-6326-4de8-b06d-2de44b5fe0fc.png)
++ 进队候选标识图
+![image](https://user-images.githubusercontent.com/28329410/173186498-1740c2e9-b73e-4968-8dbe-6823409ef344.png)
++ 选用的技能的标识图
+![image](https://user-images.githubusercontent.com/28329410/173186566-b519f553-59eb-4533-9d16-71596d03e26e.png)
++ 等待费用的时间
+正常情况约0.5秒回1费，有些buff会导致进图时只有10点初始费用，羽毛笔等高费干员便需要等待约5秒后才能有足够的费用上场
++ 干员在等待上场时的标识
+![image](https://user-images.githubusercontent.com/28329410/173186691-93e3e20d-8b2a-48de-ab1b-67557f314f01.png)
++ 释放技能时的技能图标
+![image](https://user-images.githubusercontent.com/28329410/173186734-feb227d5-1da2-4dbe-bfff-9fcfd9fbb42b.png)
 
