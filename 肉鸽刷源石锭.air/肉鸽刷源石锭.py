@@ -7,8 +7,8 @@ import json
 auto_setup(__file__)
 
 # ----- 脚本运行模式 -----
-# 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro'
-mobileType = 'Mate40Pro'
+# 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro异形屏0'
+mobileType = 'Mate40Pro异形屏0'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
 useAgents = ('时装山', '山', '羽毛笔',)
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
@@ -534,7 +534,7 @@ def settlementExplorationIncome():
 
 # 当前脚本支持的手机设备的坐标配置信息集
 supportMobilePositionConfigs = {
-    'Mate40Pro': {
+    'Mate40Pro异形屏0': {
         '基础位置配置': {
             '屏幕中心点': (1160,850),
             '右滑屏幕起始点': (1150,500),
@@ -571,6 +571,11 @@ supportMobilePositionConfigs = {
             '干员上场位置': (1820,580),
             '干员朝向位置': (2100,580),
             '干员站场位置': (1700,600)
+        },
+        '死斗': {
+            '干员上场位置': (865,835),
+            '干员朝向位置': (400,850),
+            '干员站场位置': (620,835)
         },
         '事件': {
             '能点到一个或两个选项中最下面的选项的位置': (1900,620),
@@ -644,6 +649,7 @@ strategies = (
     BattleStrategy('意外', Template(r"tpl1653668846937.png", record_pos=(0.269, -0.112), resolution=(2376, 1152))),
     BattleStrategy('礼炮小队', Template(r"tpl1653641521012.png", record_pos=(0.26, -0.133), resolution=(2376, 1152))),
     BattleStrategy('驯兽小屋', Template(r"tpl1653641068701.png", record_pos=(0.259, -0.134), resolution=(2376, 1152))),
+    BattleStrategy('死斗', Template(r"tpl1655520829193.png", record_pos=(0.269, -0.111), resolution=(2376, 1152))),
 
     EventStrategy('不期而遇', Template(r"tpl1642143362809.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
     EventStrategy('幕间余兴', Template(r"tpl1642172966906.png", threshold=0.9000000000000001, record_pos=(0.247, -0.145), resolution=(1440, 810)))
