@@ -8,8 +8,8 @@ auto_setup(__file__)
 
 # ----- 脚本运行模式 -----
 # 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro异形屏0'
-# mobileType = 'Mate40Pro异形屏0'
-mobileType = 'mumu1440x810'
+mobileType = 'Mate40Pro异形屏0'
+# mobileType = 'mumu1440x810'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
 useAgents = ('时装山', '山', '羽毛笔',)
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
@@ -18,9 +18,16 @@ onlyAssist = False
 
 # ----- 通用的一些操作 -----
 # 竖屏时的宽 y轴
-width = G.DEVICE.display_info['width']
+try:
+    width = G.DEVICE.display_info['width']
+except:
+    width = 810
 # 竖屏时的高 x轴
-height = G.DEVICE.display_info['height']
+try:
+    height = G.DEVICE.display_info['height']
+except:
+    height = 1440
+screenCenter = (width / 2, height / 2)
 
 # 1秒内尝试点击一个图片，没有找到图片就不点击
 def tryTouch(img):
@@ -212,7 +219,7 @@ class BattleStrategy(Strategy):
         sleep(4.0)
         # 识别到了点击一下
         while exists(Template(r"tpl1641989217172.png", record_pos=(-0.366, 0.15), resolution=(1440, 810))):
-            touch(basePositions['屏幕中心点'])
+            touch(screenCenter)
             sleep(1)
         sleep(1.0)
         
@@ -250,7 +257,7 @@ class EventStrategy(Strategy):
     def challenge(self, agent, basePositions, targetPositions):
         touch(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810)))
         sleep(4.0)
-        touch(basePositions['屏幕中心点'])
+        touch(screenCenter)
         sleep(3.0)
         # 这里是针对不期而遇里有三个选项的情况进行确认。
         if exists(Template(r"tpl1642038786944.png", record_pos=(0.435, 0.071), resolution=(1440, 810))):
@@ -501,7 +508,7 @@ def exitExploration(basePositions):
         sleep(1)
     touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
-        touch(basePositions['屏幕中心点'])
+        touch(screenCenter)
         sleep(1.0)
     touch(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
     while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
@@ -528,7 +535,7 @@ def settlementExplorationIncome():
     while exists(Template(r"tpl1653450900687.png", record_pos=(0.423, 0.158), resolution=(2376, 1152))):
         sleep(60)
     while not exists(Template(r"tpl1646224294375.png", threshold=0.9000000000000001, record_pos=(0.405, 0.191), resolution=(1440, 810))):
-        touch(basePositions['屏幕中心点'])
+        touch(screenCenter)
         sleep(1)
 
 # ----- 脚本运行配置 -----
@@ -537,7 +544,6 @@ def settlementExplorationIncome():
 supportMobilePositionConfigs = {
     'Mate40Pro异形屏0': {
         '基础位置配置': {
-            '屏幕中心点': (1160,850),
             '右滑屏幕起始点': (1150,500),
             '关卡奖励列表的第一个接受按钮': (255,860),
             '第一个加人入队按钮': (535,260),
@@ -584,7 +590,6 @@ supportMobilePositionConfigs = {
     },
     'mumu1440x810': {
         '基础位置配置': {
-            '屏幕中心点': (720,405),
             '右滑屏幕起始点': (670,500),
             '关卡奖励列表的第一个接受按钮': (185,620),
             '第一个加人入队按钮': (250,190),
@@ -689,6 +694,12 @@ if __name__ == "__main__":
             chooseLevel(mobilePositionConfig['关卡按钮的可能位置'])
             # 查找关卡攻略
             strategy = findStrategy()
+            if strategy is not None:
+                print('匹配到的关卡：' + strategy.targetName)
+            else:
+                print('关卡匹配失败！退出本轮探索')
+                success = True
+                break
             # 攻略关卡
             success = tryChallenge(strategy, warrior, mobilePositionConfig)
             # 是否挑战失败或已经挑战到关底
@@ -699,4 +710,5 @@ if __name__ == "__main__":
             exitExploration(mobilePositionConfig['基础位置配置'])
         # 结束本轮探索并结算本轮探索收益
         settlementExplorationIncome()
+
 

@@ -14,6 +14,8 @@
 
 ![机型](images/机型.png)
 
+![mate40pro异形屏设置](images/mate40pro异形屏设置.png)
+
 + 自动收取过关时的源石锭和收藏品，提高积攒源石和基础藏品的效率
 
 ![收取奖励](images/收取奖励.png)
