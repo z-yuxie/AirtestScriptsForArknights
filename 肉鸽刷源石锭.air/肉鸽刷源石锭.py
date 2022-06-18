@@ -27,7 +27,7 @@ try:
     height = G.DEVICE.display_info['height']
 except:
     height = 1440
-screenCenter = (width / 2, height / 2)
+screenCenter = (height / 2, width / 2)
 
 # 1秒内尝试点击一个图片，没有找到图片就不点击
 def tryTouch(img):
