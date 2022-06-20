@@ -17,16 +17,17 @@ onlyAssist = False
 
 
 # ----- 通用的一些操作 -----
-# 竖屏时的宽 y轴
-try:
-    width = G.DEVICE.display_info['width']
-except:
-    width = 810
 # 竖屏时的高 x轴
 try:
     height = G.DEVICE.display_info['height']
 except:
     height = 1440
+# 竖屏时的宽 y轴
+try:
+    width = G.DEVICE.display_info['width']
+except:
+    width = 810
+# 计算出屏幕中心点 (x, y)
 screenCenter = (height / 2, width / 2)
 
 # 1秒内尝试点击一个图片，没有找到图片就不点击
@@ -38,7 +39,7 @@ def tryTouch(img):
 
 # 从右向左滑动屏幕，使屏幕右侧的内容可以显示出来
 def swipe2Right(startPosition):
-    swipe(startPosition, vector=[-0.3,0])
+    swipe(startPosition, vector=[-0.2,0])
 
 
 # ----- 基础类型 -----
@@ -520,10 +521,11 @@ def settlementExplorationIncome():
     sleep(3.0)
     while not exists(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080))):
         sleep(1)
-    touch(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080)))
+    tryTouch(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080)))
     sleep(6.0)
     while not exists(Template(r"tpl1653122941343.png", record_pos=(0.02, 0.192), resolution=(2242, 1080))):
-        sleep(1.0)
+        tryTouch(Template(r"tpl1653122893867.png", record_pos=(0.461, -0.001), resolution=(2242, 1080)))
+        sleep(6.0)
     while exists(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152))):
         tryTouch(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152)))
         sleep(1.0)
