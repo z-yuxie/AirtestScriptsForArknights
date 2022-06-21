@@ -378,10 +378,12 @@ def chooseHow2Explore(basePositions):
         #精二高级的山比较稳定过关，所以选了这个分队'''
         swipe2Right(basePositions['右滑屏幕起始点'])
     else:
-        touch(Template(r"tpl1641990883595.png", threshold=0.9000000000000001, record_pos=(0.203, 0.063), resolution=(1440, 810)))
-    #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
-        sleep(1.0)
-        touch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
+        while exists(Template(r"tpl1641990883595.png", threshold=0.9000000000000001, record_pos=(0.203, 0.063), resolution=(1440, 810))):
+            tryTouch(Template(r"tpl1641990883595.png", threshold=0.9000000000000001, record_pos=(0.203, 0.063), resolution=(1440, 810)))
+            #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
+            sleep(1.0)
+            tryTouch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
+            sleep(1.0)
     sleep(1.0)
     touch(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
     sleep(1.0)
