@@ -129,8 +129,13 @@ class NeedOpenSkillAgent(Agent):
 
     # 重写开技能的逻辑
     def releaseSkill(self, agentPosition):
+        sleep_time = 0
         while not exists(Template(r"tpl1653728387510.png", record_pos=(-0.169, -0.135), resolution=(2376, 1152))):
+            # 等待技能时间最长不超过3分钟，否则退出技能释放判定，避免干员在开技能之前就挂掉后导致脚本卡住
+            if sleep_time >= 180:
+                return
             sleep(1)
+            sleep_time = sleep_time + 1
         touch(agentPosition)
         sleep(1)
         touch(self.skillMark4Release)
