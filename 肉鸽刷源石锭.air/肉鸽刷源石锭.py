@@ -13,7 +13,7 @@ mobileType = 'mumu1440x810'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
 useAgents = ('时装山', '山', '羽毛笔',)
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
-onlyAssist = False
+onlyAssist = True
 
 
 # ----- 通用的一些操作 -----
@@ -433,9 +433,10 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
                     break
                 touch(agentPosition)
                 # 判断是否进入到招募助战页
-                if exists(Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152))):
+                if exists(Template(r"tpl1658585243605.png", record_pos=(0.156, 0.124), resolution=(1440, 810))):
                     # 点击招募助战按钮
-                    touch(Template(r"tpl1653816325823.png", record_pos=(0.158, 0.103), resolution=(2376, 1152)))
+                    touch(Template(r"tpl1658585243605.png", record_pos=(0.156, 0.124), resolution=(1440, 810)))
+                    sleep(2)
                     agent.showDown()
                     return agent
                 # 如果不使用continue进入下一轮循环，会导致swipe2Right被认为是k这个循环内的代码（很奇怪为啥会这样），而被不合时宜的执行
@@ -446,9 +447,9 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
                 swipe2Right(swipeAgentListStartPosition)
                 continue
             continue
-        while not exists(Template(r"tpl1653816371992.png", record_pos=(0.439, -0.212), resolution=(2376, 1152))):
+        while not exists(Template(r"tpl1658585376428.png", record_pos=(0.437, -0.257), resolution=(1440, 810))):
             sleep(1)
-        touch(Template(r"tpl1653816371992.png", record_pos=(0.439, -0.212), resolution=(2376, 1152)))
+        touch(Template(r"tpl1658585376428.png", record_pos=(0.437, -0.257), resolution=(1440, 810)))
         
 # 不招募其他干员
 def notEnlistOtherAgents():
