@@ -115,7 +115,12 @@ class Agent:
     def enter(self, targetPositions):
         if self.wait4Cost:
             sleep(self.wait4Cost)
-        swipe(self.wait4EnterMark, targetPositions['干员上场位置'], duration = 1.5)
+        # 如果没有识别到待上场的干员的坐标，则循环多次检测
+        positionInTeam = exists(self.wait4EnterMark)
+        while not positionInTeam:
+            sleep(0.5)
+            positionInTeam = exists(self.wait4EnterMark)
+        swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
         sleep(0.5)
         swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
 
@@ -236,6 +241,20 @@ class BattleStrategy(Strategy):
         while exists(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152))):
             touch(basePositions['关卡奖励列表的第一个接受按钮'])
             sleep(1.5)
+        # 判断是否进入到剧目
+        while exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810))):
+            touch(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+        # 不小心进到干员选择界面时，退出干员选择界面
+        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
+            sleep(1)
+            abandonRecruitment()
+        getAllGiftTag = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
+        while getAllGiftTag:
+            touch(getAllGiftTag)
+            sleep(2.5)
+            getAllGiftTag = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
+            if not getAllGiftTag:
+                return
         while not exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810))):#判断有没有这个图片
             swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
         else:
@@ -461,11 +480,15 @@ def notEnlistOtherAgents():
     for i in range(2):  
         touch(Template(r"tpl1646060523902.png", threshold=0.9000000000000001, record_pos=(-0.001, 0.145), resolution=(1440, 810)))
         sleep(1)
-        touch(Template(r"tpl1646271295365.png", threshold=0.9000000000000001, record_pos=(0.277, 0.247), resolution=(1440, 810)))
-        sleep(0.5)
-        touch(Template(r"tpl1646271313530.png", threshold=0.9000000000000001, record_pos=(0.157, 0.106), resolution=(1440, 810)))
-        sleep(1.0)
+        abandonRecruitment()
 
+# 放弃招募
+def abandonRecruitment():
+    touch(Template(r"tpl1646271295365.png", threshold=0.9000000000000001, record_pos=(0.277, 0.247), resolution=(1440, 810)))
+    sleep(0.5)
+    touch(Template(r"tpl1646271313530.png", threshold=0.9000000000000001, record_pos=(0.157, 0.106), resolution=(1440, 810)))
+    sleep(1.0)
+        
 # 确认进入古堡
 def confirmEnterCastle():
     touch(Template(r"tpl1641991718574.png", record_pos=(0.441, -0.006), resolution=(1440, 810)))
@@ -479,7 +502,9 @@ def organizeIntoTeams(agent, basePositions):
         touch(basePositions['第一个加人入队按钮'])
         sleep(0.5)
         agent.joinTheTeam(basePositions['待入队干员技能选择栏坐标'])
-    touch(Template(r"tpl1653796258656.png", record_pos=(-0.455, -0.21), resolution=(2376, 1152)))
+    while exists(Template(r"tpl1653796258656.png", record_pos=(-0.455, -0.21), resolution=(2376, 1152))):
+        touch(Template(r"tpl1653796258656.png", record_pos=(-0.455, -0.21), resolution=(2376, 1152)))
+        sleep(1)
 
 # 选择要攻略的关卡
 def chooseLevel(levelButtonPositions):
@@ -720,5 +745,6 @@ if __name__ == "__main__":
             exitExploration(mobilePositionConfig['基础位置配置'])
         # 结束本轮探索并结算本轮探索收益
         settlementExplorationIncome()
+
 
 
