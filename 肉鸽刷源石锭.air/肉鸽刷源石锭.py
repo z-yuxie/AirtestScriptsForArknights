@@ -13,7 +13,7 @@ mobileType = 'mumu1440x810'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
 useAgents = ('时装山', '山', '羽毛笔',)
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
-onlyAssist = True
+onlyAssist = False
 
 
 # ----- 通用的一些操作 -----
@@ -124,6 +124,7 @@ class Agent:
         while not positionInTeam:
             sleep(0.5)
             positionInTeam = exists(self.wait4EnterMark)
+        # 下次更新需要在此处加一个干员上场失败的判断，判断的方式是检测场上是否存在干员的小人
         swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
         sleep(0.5)
         swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
