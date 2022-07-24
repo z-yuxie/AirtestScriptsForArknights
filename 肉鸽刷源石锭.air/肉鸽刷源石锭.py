@@ -81,15 +81,19 @@ class Agent:
         touch(Template(r"tpl1654876633543.png", record_pos=(0.42, 0.204), resolution=(2376, 1152)))
         sleep(3.0)
     
-    # 结束立绘展示
+    # 结束立绘展示，如果当前干员的立绘一直检测失败，则表示可能招错了人，需要进行纠正
     def showDown(self):
+        showDownCheckCount = 0
         # 判断画面是否在那个招到了干员的立绘画面
         while not exists(self.portrait):
+            if showDownCheckCount >= 10:
+                return False
             sleep(1.0)
+            showDownCheckCount = showDownCheckCount + 1
         # 点击立绘进入下一步
         touch(self.portrait)
         sleep(1.0)
-        
+        return True
         
     # 是否已经在队伍中
     def isInTeam(self):
@@ -242,8 +246,11 @@ class BattleStrategy(Strategy):
             touch(basePositions['关卡奖励列表的第一个接受按钮'])
             sleep(1.5)
         # 判断是否进入到剧目
-        while exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810))):
-            touch(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+        repertoireCheckPosition = exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+        while repertoireCheckPosition:
+            touch(repertoireCheckPosition)
+            sleep(1)
+            repertoireCheckPosition = exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
         # 不小心进到干员选择界面时，退出干员选择界面
         while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
             sleep(1)
@@ -388,6 +395,9 @@ def prepareEnterCastle(agents, basePositions):
     acceptInitCollection()
     chooseHow2Explore(basePositions)
     agent = chooseSaberAgent(agents, basePositions['右滑屏幕起始点'])
+    # 没有招募到干员时，直接退出
+    if not agent:
+        return False
     notEnlistOtherAgents()
     return agent
 
@@ -437,7 +447,19 @@ def tryEnlistAgent(agents, swipeAgentListStartPosition):
             if not agent.canEnlist():
                 continue
             agent.answer()
-            agent.showDown()
+            isShowDown = agent.showDown()
+            # 立绘检测失败可能是招错了干员，判断错招的干员是否在支持列表中
+            if not isShowDown:
+                for reCheckAgent in agents:
+                    isShowDown = reCheckAgent.showDown()
+                    if isShowDown:
+                        agent = reCheckAgent
+                    continue
+            # 不在支持列表中，直接返回招募失败，重开一局
+            if not isShowDown:
+                touch(screenCenter)
+                sleep(1)
+                return False
             return agent
         # 滑动界面，继续检查能否找到目标干员
         swipe2Right(swipeAgentListStartPosition)
@@ -461,7 +483,19 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
                     # 点击招募助战按钮
                     touch(Template(r"tpl1658585243605.png", record_pos=(0.156, 0.124), resolution=(1440, 810)))
                     sleep(2)
-                    agent.showDown()
+                    isShowDown = agent.showDown()
+                    # 立绘检测失败可能是招错了干员，判断错招的干员是否在支持列表中
+                    if not isShowDown:
+                        for reCheckAgent in agents:
+                            isShowDown = reCheckAgent.showDown()
+                            if isShowDown:
+                                agent = reCheckAgent
+                            continue
+                    # 不在支持列表中，直接返回招募失败，重开一局
+                    if not isShowDown:
+                        touch(screenCenter)
+                        sleep(1)
+                        return False
                     return agent
                 # 如果不使用continue进入下一轮循环，会导致swipe2Right被认为是k这个循环内的代码（很奇怪为啥会这样），而被不合时宜的执行
                 else:
@@ -718,6 +752,13 @@ if __name__ == "__main__":
         confirmExploration(mobilePositionConfig['基础位置配置'])
         # 进入古堡前的准备，选出一位探索古堡的勇士干员
         warrior = prepareEnterCastle(agents, mobilePositionConfig['基础位置配置'])
+        # 如果干员招募失败，则退出重开一局
+        if not warrior:
+            # 退出本轮探索
+            exitExploration(mobilePositionConfig['基础位置配置'])
+            # 结束本轮探索并结算本轮探索收益
+            settlementExplorationIncome()
+            continue
         # 准备完成，确认进入古堡
         confirmEnterCastle()
         # 将勇士加入探索编队
