@@ -9,9 +9,11 @@ auto_setup(__file__)
 # ----- 脚本运行模式 -----
 # 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro异形屏0'
 # mobileType = 'Mate40Pro异形屏0'
-mobileType = 'mumu1440x810'
+mobileType = 'Mate40Pro异形屏0'
 # 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
-useAgents = ('时装山', '山', '羽毛笔',)
+useAgents = ('时装笔',)
+# 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
+fastMatchStrategy = True
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
 onlyAssist = False
 
@@ -41,6 +43,13 @@ def tryTouch(img):
 def swipe2Right(startPosition):
     swipe(startPosition, vector=[-0.2,0])
 
+# 如果目标图片存在，就一直点击该图片，直到该图片消失
+def keepTouchIfExist(img):
+    position = exists(img)
+    while position:
+        touch(position)
+        sleep(1.5)
+        position = exists(img)
 
 # ----- 基础类型 -----
 # -- 干员类型模板 --
@@ -247,22 +256,12 @@ class BattleStrategy(Strategy):
             touch(basePositions['关卡奖励列表的第一个接受按钮'])
             sleep(1.5)
         # 判断是否进入到剧目
-        repertoireCheckPosition = exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
-        while repertoireCheckPosition:
-            touch(repertoireCheckPosition)
-            sleep(1)
-            repertoireCheckPosition = exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+        keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
         # 不小心进到干员选择界面时，退出干员选择界面
         while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
             sleep(1)
             abandonRecruitment()
-        getAllGiftTag = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
-        while getAllGiftTag:
-            touch(getAllGiftTag)
-            sleep(2.5)
-            getAllGiftTag = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
-            if not getAllGiftTag:
-                return
+        keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         while not exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810))):#判断有没有这个图片
             swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
         else:
@@ -553,6 +552,8 @@ def findStrategy():
     for strategy in strategies:
         if not strategy.itsMyTime():
             continue
+        if fastMatchStrategy:
+            return strategy
         reCheckList.append(strategy)
     if len(reCheckList) == 1:
         return reCheckList[0]
@@ -579,7 +580,7 @@ def exitExploration(basePositions):
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
         touch(screenCenter)
         sleep(1.0)
-    touch(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
+    keepTouchIfExist(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
     while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
         sleep(1.0)
     touch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
@@ -719,6 +720,9 @@ scriptSupportAgents = {
     ),
     '羽毛笔': Agent(
         '羽毛笔', Template(r"tpl1654876856644.png", record_pos=(0.354, 0.126), resolution=(2376, 1152)), Template(r"tpl1654881100153.png", record_pos=(0.33, 0.0), resolution=(2376, 1152)), Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152)), Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152)), Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152)), None, 5, Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152)), None
+    ),
+    '时装笔': Agent(
+        '羽毛笔', Template(r"tpl1661003927437.png", record_pos=(0.053, -0.138), resolution=(2376, 1152)), Template(r"tpl1661003987591.png", record_pos=(0.252, 0.01), resolution=(2376, 1152)), Template(r"tpl1661004047547.png", record_pos=(0.06, -0.081), resolution=(2376, 1152)), Template(r"tpl1661004130364.png", record_pos=(-0.266, -0.121), resolution=(2376, 1152)), Template(r"tpl1661004105685.png", record_pos=(-0.113, -0.142), resolution=(2376, 1152)), None, 5, Template(r"tpl1661004174372.png", record_pos=(0.463, 0.192), resolution=(2376, 1152)), None
     )
 }
 
