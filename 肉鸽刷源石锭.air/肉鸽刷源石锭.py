@@ -10,8 +10,8 @@ auto_setup(__file__)
 # 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro异形屏0'
 # mobileType = 'Mate40Pro异形屏0'
 mobileType = 'mumu1440x810'
-# 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
-useAgents = ('山', '时装山', '时装笔', '羽毛笔',)
+# 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
+useAgents = ('书山', '山', '皮山', '时装笔', '羽毛笔',)
 # 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
 fastMatchStrategy = True
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
@@ -712,7 +712,10 @@ supportMobilePositionConfigs = {
 # 干员名称: 干员信息
 # 干员信息格式：干员名称, 招募界面角色标识图, 助战招募界面角色标识图, 立绘标识图, 进队标识图, 进队候选标识图, 选用的技能的标识图, 等待费用的时间(正常情况约0.5秒回1费), 干员在等待上场时的标识, 释放技能时的技能图标
 scriptSupportAgents = {
-    '时装山': NeedOpenSkillAgent(
+    '书山': NeedOpenSkillAgent(
+        '山', Template(r"tpl1662650693135.png", record_pos=(-0.149, -0.052), resolution=(2376, 1152)), Template(r"tpl1662650775079.png", record_pos=(0.152, 0.001), resolution=(2376, 1152)), Template(r"tpl1662650799826.png", record_pos=(0.061, -0.114), resolution=(2376, 1152)), Template(r"tpl1662650914025.png", record_pos=(-0.261, -0.125), resolution=(2376, 1152)), Template(r"tpl1662650888953.png", record_pos=(-0.149, -0.144), resolution=(2376, 1152)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1662650952970.png", record_pos=(0.463, 0.191), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
+    ),
+    '皮山': NeedOpenSkillAgent(
         '山', Template(r"tpl1654876740282.png", record_pos=(-0.149, 0.035), resolution=(2376, 1152)), Template(r"tpl1654877639494.png", record_pos=(-0.013, 0.009), resolution=(2376, 1152)), Template(r"tpl1654876084914.png", record_pos=(-0.106, 0.002), resolution=(2376, 1152)), Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)), Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
     ),
     '山': NeedOpenSkillAgent(
