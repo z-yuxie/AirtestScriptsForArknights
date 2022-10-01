@@ -6,22 +6,15 @@ import json
 
 auto_setup(__file__)
 
-
-
-
-
 # ----- 脚本运行模式 -----
-# 肉鸽类型（仅单选） 支持：'傀影' '水月'
-storyType = '水月'
 # 当前使用机型（仅单选） 支持：'mumu1440x810' 'Mate40Pro异形屏0'
 # mobileType = 'Mate40Pro异形屏0'
 mobileType = 'mumu1440x810'
-# 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
-useAgents = ('书山', '山', '皮山', '时装笔', '羽毛笔',)
-# 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
-fastMatchStrategy = True
+# 备选干员（可多选）支持以下三种('山', '时装山', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
+useAgents = ('羽毛笔',)
+# 备份useAgents = ('时装山', '山', '羽毛笔',)
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
-onlyAssist = False
+onlyAssist = True
 
 
 # ----- 通用的一些操作 -----
@@ -49,13 +42,6 @@ def tryTouch(img):
 def swipe2Right(startPosition):
     swipe(startPosition, vector=[-0.2,0])
 
-# 如果目标图片存在，就一直点击该图片，直到该图片消失
-def keepTouchIfExist(img):
-    position = exists(img)
-    while position:
-        touch(position)
-        sleep(1.5)
-        position = exists(img)
 
 # ----- 基础类型 -----
 # -- 干员类型模板 --
@@ -143,6 +129,16 @@ class Agent:
         swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
         sleep(0.5)
         swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+        
+        swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
+        sleep(0.5)
+        swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+        
+        swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
+        sleep(0.5)
+        swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+
+
 
     # 基础干员默认不需要开技能
     def releaseSkill(self, agentPosition):
@@ -151,19 +147,9 @@ class Agent:
 # 上场后需要开技能的干员
 class NeedOpenSkillAgent(Agent):
     '上场后需要手动开一次技能的干员'
+    
 
-    # 重写开技能的逻辑
-    def releaseSkill(self, agentPosition):
-        sleep_time = 0
-        while not exists(Template(r"tpl1653728387510.png", record_pos=(-0.169, -0.135), resolution=(2376, 1152))):
-            # 等待技能时间最长不超过3分钟，否则退出技能释放判定，避免干员在开技能之前就挂掉后导致脚本卡住
-            if sleep_time >= 180:
-                return
-            sleep(1)
-            sleep_time = sleep_time + 1
-        touch(agentPosition)
-        sleep(1)
-        touch(self.skillMark4Release)
+    
 
 # -- 关卡攻略类型模板 --
 # 基础关卡攻略模板
@@ -214,9 +200,19 @@ class BattleStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        touch(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152)))
+
+                 
+        touch(Template(r"tpl1664271415932.png", record_pos=(0.383, 0.11), resolution=(1440, 810)))
         sleep(1.0)
+        while exists(Template(r"tpl1664281327813.png", record_pos=(-0.003, 0.23), resolution=(1440, 810))):
+            sleep(1)
+            Bluetick()
+            
+        sleep(1)    
         touch(Template(r"tpl1641988492692.png", record_pos=(0.322, 0.242), resolution=(1440, 810)))
+
+        
+        sleep(1)
         while not exists(Template(r"tpl1646226625337.png", threshold=0.9000000000000001, record_pos=(0.044, -0.258), resolution=(1440, 810))):
             sleep(1)  
         sleep(2)
@@ -258,16 +254,24 @@ class BattleStrategy(Strategy):
         while exists(Template(r"tpl1653115016616.png", record_pos=(-0.354, 0.015), resolution=(2242, 1080))):
             touch(basePositions['关卡奖励列表的第一个接受按钮'])
             sleep(1.5)
-        while exists(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152))):
-            touch(basePositions['关卡奖励列表的第一个接受按钮'])
-            sleep(1.5)
+
         # 判断是否进入到剧目
-        keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+        repertoireCheckPosition = exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+        while repertoireCheckPosition:
+            touch(repertoireCheckPosition)
+            sleep(1)
+            repertoireCheckPosition = exists(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
         # 不小心进到干员选择界面时，退出干员选择界面
-        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
+        while exists(Template(r"tpl1664591452819.png", record_pos=(0.423, 0.247), resolution=(1440, 810))):
             sleep(1)
             abandonRecruitment()
-        keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
+        getAllGiftTag = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
+        while getAllGiftTag:
+            touch(getAllGiftTag)
+            sleep(2.5)
+            getAllGiftTag = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
+            if not getAllGiftTag:
+                return
         while not exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810))):#判断有没有这个图片
             swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
         else:
@@ -278,7 +282,7 @@ class BattleStrategy(Strategy):
     
     # 处理挑战失败的情况
     def processFail(self):
-        touch(Template(r"tpl1653546790468.png", record_pos=(-0.001, 0.162), resolution=(2376, 1152)))
+        touch(Template(r"tpl1664318360957.png", record_pos=(-0.008, -0.007), resolution=(1440, 810)))
 
 # 事件关卡攻略模板
 class EventStrategy(Strategy):
@@ -293,7 +297,7 @@ class EventStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        touch(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810)))
+        touch(Template(r"tpl1664271415932.png", record_pos=(0.383, 0.11), resolution=(1440, 810)))
         sleep(4.0)
         touch(screenCenter)
         sleep(3.0)
@@ -305,8 +309,24 @@ class EventStrategy(Strategy):
         sleep(2.0)
         tryTouch(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))
         sleep(4.0)
-        touch(Template(r"tpl1641987578489.png", record_pos=(0.0, 0.232), resolution=(1440, 810)))
-        sleep(3.0)
+        while exists(Template(r"tpl1664591452819.png", record_pos=(0.423, 0.247), resolution=(1440, 810))):
+            sleep(1)
+            abandonRecruitment()
+        sleep(2.0)
+        while exists(Template(r"tpl1641987578489.png", record_pos=(0.0, 0.232), resolution=(1440, 810))):
+            sleep(2)
+            greytick()
+        while exists(Template(r"tpl1664574462850.png", record_pos=(0.01, -0.007), resolution=(1440, 810))):
+            sleep(1)
+            leave()
+            
+        sleep(2.0)        
+        while exists(Template(r"tpl1664281327813.png", record_pos=(-0.003, 0.23), resolution=(1440, 810))):
+            sleep(1)
+            Bluetick()
+            
+        sleep(1)
+        
         return True
 
 # 商店关卡攻略模板
@@ -323,7 +343,7 @@ class StoreStrategy(Strategy):
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
         sleep(1.0)
-        touch(Template(r"tpl1653121619235.png", record_pos=(0.414, 0.082), resolution=(2242, 1080)))
+        touch(Template(r"tpl1664287235124.png", record_pos=(0.386, 0.101), resolution=(1440, 810)))
         sleep(1.0)
         # 不可以投资时直接离开
         if not self.bankingSystemExist() or self.accountFull():
@@ -380,8 +400,9 @@ class StoreStrategy(Strategy):
     # 退出商店
     def exitStore(self):
         tryTouch(Template(r"tpl1649060580969.png", threshold=0.9000000000000001, record_pos=(0.452, 0.145), resolution=(1440, 810)))
+        sleep(1)
         tryTouch(Template(r"tpl1649060602062.png", threshold=0.9000000000000001, record_pos=(0.426, 0.145), resolution=(1440, 810)))
-        sleep(5.0)
+        sleep(10.0)
     
     # 是否是最后的关底攻略
     def isLastTargetStrategy(self):
@@ -392,7 +413,7 @@ class StoreStrategy(Strategy):
 
 # 确认进行探索
 def confirmExploration(basePositions):
-    touch(Template(r"tpl1646224294375.png", threshold=0.9000000000000001, record_pos=(0.405, 0.191), resolution=(1440, 810)))
+    touch(Template(r"tpl1664282056717.png", record_pos=(0.415, 0.174), resolution=(1440, 810)))
     sleep(1.5)
 
 # 进入古堡前的准备
@@ -411,21 +432,32 @@ def prepareEnterCastle(agents, basePositions):
 def acceptInitCollection():
     tryTouch(Template(r"tpl1653448196391.png", record_pos=(-0.002, 0.189), resolution=(2376, 1152)))
     sleep(1.5)
+# exists(Template(r"tpl1659699106391.png", record_pos=(0.082, -0.065), resolution=(1440, 810)))
+
 
 # 选择探索策略
 def chooseHow2Explore(basePositions):
-    while not exists(Template(r"tpl1641990883595.png", threshold=0.9000000000000001, record_pos=(0.203, 0.063), resolution=(1440, 810))):
+    while not exists(Template(r"tpl1664420533356.png", record_pos=(0.253, 0.081), resolution=(1440, 810))):
+
+
+
+
         #精二高级的山比较稳定过关，所以选了这个分队'''
         swipe2Right(basePositions['右滑屏幕起始点'])
     else:
-        while exists(Template(r"tpl1641990883595.png", threshold=0.9000000000000001, record_pos=(0.203, 0.063), resolution=(1440, 810))):
-            tryTouch(Template(r"tpl1641990883595.png", threshold=0.9000000000000001, record_pos=(0.203, 0.063), resolution=(1440, 810)))
+        while exists(Template(r"tpl1664420533356.png", record_pos=(0.253, 0.081), resolution=(1440, 810))):
+            tryTouch(Template(r"tpl1664420533356.png", record_pos=(0.253, 0.081), resolution=(1440, 810)))
+
+
+            
+
+
             #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
             sleep(1.0)
             tryTouch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
             sleep(1.0)
     sleep(1.0)
-    touch(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
+    touch(Template(r"tpl1664283869750.png", record_pos=(0.11, 0.081), resolution=(1440, 810)))
     sleep(1.0)
     touch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
     sleep(2.0)
@@ -433,7 +465,7 @@ def chooseHow2Explore(basePositions):
 # 选择进行探索的近卫干员
 def chooseSaberAgent(agents, swipeAgentListStartPosition):
     #点击近卫招募券
-    touch(Template(r"tpl1653112240088.png", record_pos=(-0.175, 0.012), resolution=(2242, 1080)))
+    touch(Template(r"tpl1664283984921.png", record_pos=(-0.226, -0.006), resolution=(1440, 810)))
     sleep(1.0)
     # 自己没有干员的情况下，直接进行助战招募
     if onlyAssist:
@@ -475,7 +507,7 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
     touch(Template(r"tpl1653815759246.png", record_pos=(0.395, -0.212), resolution=(2376, 1152)))
     sleep(2)
     # 最多刷新10次
-    for i in range(10):
+    for i in range(50):
         for agent in agents:
             # 两次循环处理干员的助战按钮在屏幕外的情况
             for j in range(2):
@@ -518,20 +550,37 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
 # 不招募其他干员
 def notEnlistOtherAgents():
     for i in range(2):  
-        touch(Template(r"tpl1646060523902.png", threshold=0.9000000000000001, record_pos=(-0.001, 0.145), resolution=(1440, 810)))
+        touch(Template(r"tpl1664284023870.png", record_pos=(0.0, 0.132), resolution=(1440, 810)))
         sleep(1)
         abandonRecruitment()
-
 # 放弃招募
 def abandonRecruitment():
     touch(Template(r"tpl1646271295365.png", threshold=0.9000000000000001, record_pos=(0.277, 0.247), resolution=(1440, 810)))
     sleep(0.5)
     touch(Template(r"tpl1646271313530.png", threshold=0.9000000000000001, record_pos=(0.157, 0.106), resolution=(1440, 810)))
     sleep(1.0)
+# 灰色勾
+def greytick():
+    touch(Template(r"tpl1641987578489.png", record_pos=(0.0, 0.232), resolution=(1440, 810)))
+    sleep(2.0)
+
+# 兴趣盎然
+def leave():
+    touch(Template(r"tpl1664574462850.png", record_pos=(0.01, -0.007), resolution=(1440, 810)))
+    sleep(1.5)
+    touch(Template(r"tpl1664281327813.png", record_pos=(-0.003, 0.23), resolution=(1440, 810)))
+#任务已完成
+def renwu():
+    touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
+    sleep(1.0)
+#点击蓝色勾
+def Bluetick():
+    touch(Template(r"tpl1664281327813.png", record_pos=(-0.003, 0.23), resolution=(1440, 810)))
+    sleep(1)
         
 # 确认进入古堡
 def confirmEnterCastle():
-    touch(Template(r"tpl1641991718574.png", record_pos=(0.441, -0.006), resolution=(1440, 810)))
+    touch(Template(r"tpl1664281987926.png", record_pos=(0.44, -0.006), resolution=(1440, 810)))
     sleep(5.0)
 
 # 编队
@@ -558,8 +607,6 @@ def findStrategy():
     for strategy in strategies:
         if not strategy.itsMyTime():
             continue
-        if fastMatchStrategy:
-            return strategy
         reCheckList.append(strategy)
     if len(reCheckList) == 1:
         return reCheckList[0]
@@ -580,13 +627,26 @@ def tryChallenge(strategy, agent, mobilePositionConfig):
 
 # 退出本轮探索
 def exitExploration(basePositions):
+    while not exists(Template(r"tpl1664281327813.png", record_pos=(-0.003, 0.23), resolution=(1440, 810))):
+        sleep(1)
+    touch(Template(r"tpl1664281327813.png", record_pos=(-0.003, 0.23), resolution=(1440, 810)))            
+    sleep(5)    
+    
+    while exists(Template(r"tpl1664526679009.png", record_pos=(0.01, -0.082), resolution=(1440, 810))):
+        sleep(1)
+        renwu() 
+        sleep(1)
+        
+
+
+    
     while not exists(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152))):
         sleep(1)
     touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
         touch(screenCenter)
         sleep(1.0)
-    keepTouchIfExist(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
+    touch(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
     while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
         sleep(1.0)
     touch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
@@ -611,7 +671,7 @@ def settlementExplorationIncome():
     sleep(1.0)
     while exists(Template(r"tpl1653450900687.png", record_pos=(0.423, 0.158), resolution=(2376, 1152))):
         sleep(60)
-    while not exists(Template(r"tpl1646224294375.png", threshold=0.9000000000000001, record_pos=(0.405, 0.191), resolution=(1440, 810))):
+    while not exists(Template(r"tpl1664282056717.png", record_pos=(0.415, 0.174), resolution=(1440, 810))):
         touch(screenCenter)
         sleep(1)
 
@@ -627,85 +687,79 @@ supportMobilePositionConfigs = {
             '待入队干员技能选择栏坐标': (250,830)
         },
         '关卡按钮的可能位置':[
-            (800,530),
-            (1525,420),
-            (1525,630),
-            (1525,530),
-            (1525,315),
-            (1525,735),
-            (1525,210),
-            (1525,835),
+            (900,530),
+            (1625,420),
+            (1625,630),
+            (1625,530),
+            (1625,315),
+            (1625,735),
+            (1625,210),
+            (1625,835),
         ],
-        '礼炮小队': {
-            '干员上场位置': (990,570),
-            '干员朝向位置': (1160,550),
-            '干员站场位置': (830,520)
+        '射手部队': {
+            '干员上场位置': (1148,328),
+            '干员朝向位置': (924,341),
+            '干员站场位置': (1070,357)
         },
-        '与虫为伴': {
-            '干员上场位置': (1130,600),
-            '干员朝向位置': (930,600),
-            '干员站场位置': (985,590)
+        '虫群横行': {
+            '干员上场位置': (1171,425),
+            '干员朝向位置': (938,445),
+            '干员站场位置': (1089,460)
         },
-        '意外': {
-            '干员上场位置': (1314,540),
-            '干员朝向位置': (1140,540),
-            '干员站场位置': (1185,525)
+        
+            
+            
+        
+        '共生': {
+            '干员上场位置': (820,448),
+            '干员朝向位置': (806,262),
+            '干员站场位置': (718,456)
         },
-        '驯兽小屋': {
-            '干员上场位置': (1820,580),
-            '干员朝向位置': (2100,580),
-            '干员站场位置': (1700,600)
-        },
-        '死斗': {
-            '干员上场位置': (865,835),
-            '干员朝向位置': (865,450),
-            '干员站场位置': (620,835)
+        '蓄水池': {
+            '干员上场位置': (1077,501),
+            '干员朝向位置': (836,521),
+            '干员站场位置': (998,541)
         },
         '事件': {
             '能点到一个或两个选项中最下面的选项的位置': (1900,620),
         }
     },
     'mumu1440x810': {
-        '通用配置':{
-            '基础位置配置': {
-                '右滑屏幕起始点': (670,500),
-                '关卡奖励列表的第一个接受按钮': (185,620),
-                '第一个加人入队按钮': (250,190),
-                '待入队干员技能选择栏坐标': (200,600)
-            },
-            '事件': {
-                '能点到一个或两个选项中最下面的选项的位置': (1190,460),
-            },
+        '基础位置配置': {
+            '右滑屏幕起始点': (670,500),
+            '关卡奖励列表的第一个接受按钮': (185,620),
+            '第一个加人入队按钮': (250,190),
+            '待入队干员技能选择栏坐标': (200,600)
         },
         '关卡按钮的可能位置':[
-            (440,370),
-            (880,290),
-            (880,440),
-            (880,370),
-            (880,210),
-            (880,510),
-            (880,140),
-            (880,590),
+            (540,370),
+            (980,290),
+            (980,300),
+            (980,300),
+            (980,365),
+            (980,365),
+            (980,365),
+            (980,365),
         ],
-        '礼炮小队': {
-            '干员上场位置': (575,386),
-            '干员朝向位置': (1380,400),
-            '干员站场位置': (455,364)
+        '射手部队': {
+            '干员上场位置': (1148,328),
+            '干员朝向位置': (941,341),
+            '干员站场位置': (1070,357)
         },
-        '与虫为伴': {
-            '干员上场位置': (667,432),
-            '干员朝向位置': (380,400),
-            '干员站场位置': (575,411)
+        '虫群横行': {
+            '干员上场位置': (1171,425),
+            '干员朝向位置': (938,445),
+            '干员站场位置': (1089,460)
         },
-        '意外': {
-            '干员上场位置': (806,370),
-            '干员朝向位置': (380,400),
-            '干员站场位置': (715,363)
+        '共生': {
+            '干员上场位置': (820,448),
+            '干员朝向位置': (806,262),
+            '干员站场位置': (718,456)
         },
-        '驯兽小屋': {
-            '干员上场位置': (1180,400),
-            '干员朝向位置': (1400,400),
-            '干员站场位置': (1100,410)
+        '蓄水池': {
+            '干员上场位置': (1077,501),
+            '干员朝向位置': (836,521),
+            '干员站场位置': (998,541)
         },
         '死斗': {
             '干员上场位置': (480,600),
@@ -723,10 +777,7 @@ supportMobilePositionConfigs = {
 # 干员名称: 干员信息
 # 干员信息格式：干员名称, 招募界面角色标识图, 助战招募界面角色标识图, 立绘标识图, 进队标识图, 进队候选标识图, 选用的技能的标识图, 等待费用的时间(正常情况约0.5秒回1费), 干员在等待上场时的标识, 释放技能时的技能图标
 scriptSupportAgents = {
-    '书山': NeedOpenSkillAgent(
-        '山', Template(r"tpl1662650693135.png", record_pos=(-0.149, -0.052), resolution=(2376, 1152)), Template(r"tpl1662650775079.png", record_pos=(0.152, 0.001), resolution=(2376, 1152)), Template(r"tpl1662650799826.png", record_pos=(0.061, -0.114), resolution=(2376, 1152)), Template(r"tpl1662650914025.png", record_pos=(-0.261, -0.125), resolution=(2376, 1152)), Template(r"tpl1662650888953.png", record_pos=(-0.149, -0.144), resolution=(2376, 1152)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1662650952970.png", record_pos=(0.463, 0.191), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
-    ),
-    '皮山': NeedOpenSkillAgent(
+    '时装山': NeedOpenSkillAgent(
         '山', Template(r"tpl1654876740282.png", record_pos=(-0.149, 0.035), resolution=(2376, 1152)), Template(r"tpl1654877639494.png", record_pos=(-0.013, 0.009), resolution=(2376, 1152)), Template(r"tpl1654876084914.png", record_pos=(-0.106, 0.002), resolution=(2376, 1152)), Template(r"tpl1653114218333.png", record_pos=(-0.249, -0.124), resolution=(2242, 1080)), Template(r"tpl1649332188667.png", record_pos=(0.457, 0.237), resolution=(1440, 810)), Template(r"tpl1653448639620.png", record_pos=(-0.464, 0.141), resolution=(2376, 1152)), 0, Template(r"tpl1653810245161.png", record_pos=(-0.225, 0.193), resolution=(2376, 1152)), Template(r"tpl1653804899756.png", record_pos=(0.121, 0.025), resolution=(2376, 1152))
     ),
     '山': NeedOpenSkillAgent(
@@ -734,24 +785,23 @@ scriptSupportAgents = {
     ),
     '羽毛笔': Agent(
         '羽毛笔', Template(r"tpl1654876856644.png", record_pos=(0.354, 0.126), resolution=(2376, 1152)), Template(r"tpl1654881100153.png", record_pos=(0.33, 0.0), resolution=(2376, 1152)), Template(r"tpl1653668752866.png", record_pos=(-0.023, 0.127), resolution=(2376, 1152)), Template(r"tpl1653727095461.png", record_pos=(-0.26, -0.117), resolution=(2376, 1152)), Template(r"tpl1653668896069.png", record_pos=(-0.118, -0.138), resolution=(2376, 1152)), None, 5, Template(r"tpl1653810270867.png", record_pos=(0.083, 0.194), resolution=(2376, 1152)), None
-    ),
-    '时装笔': Agent(
-        '羽毛笔', Template(r"tpl1661003927437.png", record_pos=(0.053, -0.138), resolution=(2376, 1152)), Template(r"tpl1661003987591.png", record_pos=(0.252, 0.01), resolution=(2376, 1152)), Template(r"tpl1661004047547.png", record_pos=(0.06, -0.081), resolution=(2376, 1152)), Template(r"tpl1661004130364.png", record_pos=(-0.266, -0.121), resolution=(2376, 1152)), Template(r"tpl1661004105685.png", record_pos=(-0.113, -0.142), resolution=(2376, 1152)), None, 5, Template(r"tpl1661004174372.png", record_pos=(0.463, 0.192), resolution=(2376, 1152)), None
     )
 }
+
+
 
 # 待选关卡攻略列表
 strategies = (
     StoreStrategy('商店', Template(r"tpl1642255403039.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
-    BattleStrategy('与虫为伴', Template(r"tpl1653738179917.png", record_pos=(0.29, -0.112), resolution=(2376, 1152))),
+    BattleStrategy('射手部队', Template(r"tpl1664284872311.png", record_pos=(0.263, -0.123), resolution=(1440, 810))),
 
-    BattleStrategy('意外', Template(r"tpl1653668846937.png", record_pos=(0.269, -0.112), resolution=(2376, 1152))),
-    BattleStrategy('礼炮小队', Template(r"tpl1653641521012.png", record_pos=(0.26, -0.133), resolution=(2376, 1152))),
-    BattleStrategy('驯兽小屋', Template(r"tpl1653641068701.png", record_pos=(0.259, -0.134), resolution=(2376, 1152))),
-    BattleStrategy('死斗', Template(r"tpl1655520829193.png", record_pos=(0.269, -0.111), resolution=(2376, 1152))),
-
+    BattleStrategy('虫群横行', Template(r"tpl1664285365232.png", record_pos=(0.262, -0.124), resolution=(1440, 810))),
+    BattleStrategy('共生', Template(r"tpl1664285540176.png", record_pos=(0.262, -0.126), resolution=(1440, 810))),
+    BattleStrategy('蓄水池', Template(r"tpl1664285203156.png", record_pos=(0.264, -0.125), resolution=(1440, 810))),
     EventStrategy('不期而遇', Template(r"tpl1642143362809.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
-    EventStrategy('幕间余兴', Template(r"tpl1642172966906.png", threshold=0.9000000000000001, record_pos=(0.247, -0.145), resolution=(1440, 810)))
+    EventStrategy('幕间余兴', Template(r"tpl1664296276912.png", record_pos=(0.294, -0.129), resolution=(1440, 810))),
+    EventStrategy('幕间余兴', Template(r"tpl1664488355055.png", record_pos=(0.293, -0.129), resolution=(1440, 810))),
+    EventStrategy('幕间余兴', Template(r"tpl1664544319322.png", record_pos=(0.292, -0.129), resolution=(1440, 810)))
 )
 
 if __name__ == "__main__":
@@ -782,7 +832,7 @@ if __name__ == "__main__":
         confirmEnterCastle()
         # 将勇士加入探索编队
         organizeIntoTeams(warrior, mobilePositionConfig['基础位置配置'])
-        success = False
+        success = True
         # 不断挑战本轮探索内的关卡, 直到关底或者攻略关卡失败
         while(True):
             # 点击选中本次挑战关卡
