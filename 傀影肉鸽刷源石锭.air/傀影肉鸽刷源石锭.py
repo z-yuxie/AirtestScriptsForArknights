@@ -262,13 +262,18 @@ class BattleStrategy(Strategy):
         while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
             sleep(1)
             abandonRecruitment()
+        allAccept = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
-        while not exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810))):#判断有没有这个图片
-            swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
-        else:
-            touch(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810)))#判断到了就点它
-        sleep(0.5)
-        touch(Template(r"tpl1641989346223.png", record_pos=(0.339, 0.147), resolution=(1440, 810)))
+        if not allAccept:
+            #判断有没有这个图片
+            exitButtonPosition = exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810)))
+            while not exitButtonPosition:
+                swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
+                exitButtonPosition = exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810)))
+            else:
+                touch(exitButtonPosition)#判断到了就点它
+            sleep(0.5)
+            touch(Template(r"tpl1641989346223.png", record_pos=(0.339, 0.147), resolution=(1440, 810)))
         sleep(1.5)
     
     # 处理挑战失败的情况
