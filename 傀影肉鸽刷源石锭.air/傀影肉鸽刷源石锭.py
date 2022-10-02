@@ -598,7 +598,7 @@ def confirmationTaskOver():
 def exitExploration(basePositions):
     while not exists(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152))):
         sleep(1)
-    touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
+    keepTouchIfExist(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
         touch(screenCenter)
         sleep(1.0)
