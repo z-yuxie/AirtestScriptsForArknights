@@ -13,7 +13,7 @@ auto_setup(__file__)
 mobileType = 'mumu1440x810'
 # 分队类型，可选类型参考下面765行内部的配置
 teamType = '突击分队'
-# 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
+# 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔', '海沫', '精一海沫',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
 useAgents = ('书山', '山', '皮山', '时装笔', '羽毛笔',)
 # 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
 fastMatchStrategy = True
@@ -750,6 +750,12 @@ scriptSupportAgents = {
     ),
     '时装笔': Agent(
         '羽毛笔', Template(r"tpl1661003927437.png", record_pos=(0.053, -0.138), resolution=(2376, 1152)), Template(r"tpl1661003987591.png", record_pos=(0.252, 0.01), resolution=(2376, 1152)), Template(r"tpl1661004047547.png", record_pos=(0.06, -0.081), resolution=(2376, 1152)), Template(r"tpl1661004130364.png", record_pos=(-0.266, -0.121), resolution=(2376, 1152)), Template(r"tpl1661004105685.png", record_pos=(-0.113, -0.142), resolution=(2376, 1152)), None, 5, Template(r"tpl1661004174372.png", record_pos=(0.463, 0.192), resolution=(2376, 1152)), None
+    ),
+    '精一海沫': Agent(
+        '海沫', Template(r"tpl1664690346925.png", record_pos=(0.048, 0.041), resolution=(2376, 1152)), Template(r"tpl1664690346925.png", record_pos=(0.048, 0.041), resolution=(2376, 1152)), Template(r"tpl1664690415652.png", record_pos=(0.065, -0.068), resolution=(2376, 1152)), Template(r"tpl1664690488125.png", record_pos=(-0.26, -0.12), resolution=(2376, 1152)), Template(r"tpl1664690470667.png", record_pos=(-0.112, -0.14), resolution=(2376, 1152)), None, 5, Template(r"tpl1664690548284.png", record_pos=(0.461, 0.193), resolution=(2376, 1152)), None
+    ),
+    '海沫': Agent(
+        '海沫', Template(r"tpl1664690247444.png", record_pos=(0.34, 0.015), resolution=(2376, 1152)), Template(r"tpl1664690247444.png", record_pos=(0.34, 0.015), resolution=(2376, 1152)), Template(r"tpl1664690889696.png", record_pos=(0.036, -0.082), resolution=(2376, 1152)), Template(r"tpl1664690972576.png", record_pos=(-0.26, -0.123), resolution=(2376, 1152)), Template(r"tpl1664690958268.png", record_pos=(-0.112, -0.143), resolution=(2376, 1152)), None, 5, Template(r"tpl1664691233815.png", record_pos=(0.461, 0.194), resolution=(2376, 1152)), None
     ),
 }
 
