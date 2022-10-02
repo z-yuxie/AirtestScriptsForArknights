@@ -253,11 +253,8 @@ class BattleStrategy(Strategy):
         
         keepTouchIfExist(Template(r"tpl1653115016616.png", record_pos=(-0.354, 0.015), resolution=(2242, 1080)))
         keepTouchIfExist(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152)))
-        keepTouchIfExist(Template(r"tpl1664621606838.png", record_pos=(-0.398, 0.107), resolution=(2376, 1152)))
         # 判断是否进入到剧目
         keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
-        # 判断是否误点宝箱
-        keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
         # 不小心进到干员选择界面时，退出干员选择界面
         while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
             sleep(1)
@@ -600,7 +597,6 @@ def confirmationTaskOver():
 # 退出本轮探索
 def exitExploration(basePositions):
     while not exists(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152))):
-        keepTouchIfExist(Template(r"tpl1664618931541.png", record_pos=(-0.004, 0.188), resolution=(2376, 1152)))
         sleep(1)
     touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
