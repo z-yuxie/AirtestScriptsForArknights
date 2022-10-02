@@ -309,7 +309,8 @@ class EventStrategy(Strategy):
         keepTouchIfExist(Template(r"tpl1664621247885.png", record_pos=(-0.004, 0.189), resolution=(2376, 1152)))
         sleep(4.0)
         # 备用截图
-        keepTouchIfExist(Template(r"tpl1664717830775.png", record_pos=(0.003, 0.09), resolution=(1440, 810)))
+#         keepTouchIfExist(Template(r"tpl1664717830775.png", record_pos=(0.003, 0.09), resolution=(1440, 810)))
+        touch(targetPositions['最下面选项的位置'])
         keepTouchIfExist(Template(r"tpl1664611682194.png", record_pos=(0.001, 0.19), resolution=(2376, 1152)))
         sleep(3.0)
         return True
@@ -608,14 +609,18 @@ def confirmationTaskOver():
 def exitExploration(basePositions):
     while not exists(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810))):
         keepTouchIfExist(Template(r"tpl1664618931541.png", record_pos=(-0.004, 0.188), resolution=(2376, 1152)))
+        confirmationTaskOver()
         sleep(1)
+        continue
     touch(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
     while not exists(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152))):
         touch(screenCenter)
         sleep(1.0)
+        continue
     keepTouchIfExist(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152)))
     while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
         sleep(1.0)
+        continue
     touch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
 
 # 结算探索收益
