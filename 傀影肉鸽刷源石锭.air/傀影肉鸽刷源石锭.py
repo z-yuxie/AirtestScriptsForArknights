@@ -423,14 +423,14 @@ def chooseHow2Explore(basePositions):
         #精二高级的山比较稳定过关，所以选了这个分队'''
         swipe2Right(basePositions['右滑屏幕起始点'])
     else:
-        firstTeamTypePosition = exists(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
+        firstTeamTypePosition = exists(Template(r"tpl1664723526005.png", record_pos=(0.108, -0.01), resolution=(1440, 810)))
         while (not firstTeamTypePosition):
             tryTouch(teamTypeImg)
             #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
             sleep(1.0)
             tryTouch(Template(r"tpl1664723235127.png", record_pos=(0.064, 0.183), resolution=(1440, 810)))
             sleep(1.0)
-            firstTeamTypePosition = exists(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
+            firstTeamTypePosition = exists(Template(r"tpl1664723526005.png", record_pos=(0.108, -0.01), resolution=(1440, 810)))
             
     touch(firstTeamTypePosition)
     sleep(1.0)
@@ -440,7 +440,7 @@ def chooseHow2Explore(basePositions):
 # 选择进行探索的近卫干员
 def chooseSaberAgent(agents, swipeAgentListStartPosition):
     #点击近卫招募券
-    touch(Template(r"tpl1653112240088.png", record_pos=(-0.175, 0.012), resolution=(2242, 1080)))
+    touch(Template(r"tpl1664723552729.png", record_pos=(-0.224, -0.062), resolution=(1440, 810)))
     sleep(1.0)
     # 自己没有干员的情况下，直接进行助战招募
     if onlyAssist:
