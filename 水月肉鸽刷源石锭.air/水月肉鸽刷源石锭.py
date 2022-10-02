@@ -300,14 +300,16 @@ class EventStrategy(Strategy):
         touch(screenCenter)
         sleep(3.0)
         touchPosition = targetPositions['最下面选项的位置']
-        checkButtonPosition = exists(Template(r"tpl1664623993875.png", record_pos=(0.446, 0.086), resolution=(2376, 1152)))
+        checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
         while not checkButtonPosition:
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 160)
-            checkButtonPosition = exists(Template(r"tpl1664623993875.png", record_pos=(0.446, 0.086), resolution=(2376, 1152)))
+            checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
         touch(checkButtonPosition)
         keepTouchIfExist(Template(r"tpl1664621247885.png", record_pos=(-0.004, 0.189), resolution=(2376, 1152)))
         sleep(4.0)
+        # 备用截图
+        keepTouchIfExist(Template(r"tpl1664717830775.png", record_pos=(0.003, 0.09), resolution=(1440, 810)))
         keepTouchIfExist(Template(r"tpl1664611682194.png", record_pos=(0.001, 0.19), resolution=(2376, 1152)))
         sleep(3.0)
         return True
@@ -422,24 +424,24 @@ def chooseHow2Explore(basePositions):
         #精二高级的山比较稳定过关，所以选了这个分队'''
         swipe2Right(basePositions['右滑屏幕起始点'])
     else:
-        firstTeamTypePosition = exists(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
+        firstTeamTypePosition = exists(Template(r"tpl1664716097925.png", record_pos=(0.11, -0.005), resolution=(1440, 810)))
         while (not firstTeamTypePosition):
             tryTouch(teamTypeImg)
             #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
             sleep(1.0)
-            tryTouch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
+            tryTouch(Template(r"tpl1664715871333.png", record_pos=(0.265, 0.178), resolution=(1440, 810)))
             sleep(1.0)
-            firstTeamTypePosition = exists(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
+            firstTeamTypePosition = exists(Template(r"tpl1664716097925.png", record_pos=(0.11, -0.005), resolution=(1440, 810)))
             
     touch(firstTeamTypePosition)
     sleep(1.0)
-    touch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
+    touch(Template(r"tpl1664715887145.png", record_pos=(0.11, 0.176), resolution=(1440, 810)))
     sleep(2.0)
 
 # 选择进行探索的近卫干员
 def chooseSaberAgent(agents, swipeAgentListStartPosition):
     #点击近卫招募券
-    touch(Template(r"tpl1653112240088.png", record_pos=(-0.175, 0.012), resolution=(2242, 1080)))
+    touch(Template(r"tpl1664716166233.png", record_pos=(-0.233, -0.084), resolution=(1440, 810)))
     sleep(1.0)
     # 自己没有干员的情况下，直接进行助战招募
     if onlyAssist:
@@ -604,10 +606,10 @@ def confirmationTaskOver():
 
 # 退出本轮探索
 def exitExploration(basePositions):
-    while not exists(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152))):
+    while not exists(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810))):
         keepTouchIfExist(Template(r"tpl1664618931541.png", record_pos=(-0.004, 0.188), resolution=(2376, 1152)))
         sleep(1)
-    touch(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152)))
+    touch(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
     while not exists(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152))):
         touch(screenCenter)
         sleep(1.0)
@@ -774,14 +776,14 @@ teamTypeMap = {
     '心胜于物': Template(r"tpl1664634570362.png", record_pos=(-0.39, -0.013), resolution=(2376, 1152)),
     '物尽其用': Template(r"tpl1664634556665.png", record_pos=(-0.205, -0.016), resolution=(2376, 1152)),
     '以人为本': Template(r"tpl1664634538188.png", record_pos=(-0.023, -0.017), resolution=(2376, 1152)),
-    '指挥分队': Template(r"tpl1664634415311.png", record_pos=(0.161, -0.021), resolution=(2376, 1152)),
-    '集群分队': Template(r"tpl1664634436943.png", record_pos=(-0.136, -0.016), resolution=(2376, 1152)),
-    '后勤分队': Template(r"tpl1664634455591.png", record_pos=(-0.085, -0.016), resolution=(2376, 1152)),
+    '指挥分队': Template(r"tpl1664715961278.png", record_pos=(-0.312, 0.005), resolution=(1440, 810)),
+    '集群分队': Template(r"tpl1664715986102.png", record_pos=(-0.09, 0.009), resolution=(1440, 810)),
+    '后勤分队': Template(r"tpl1664715972862.png", record_pos=(0.132, 0.003), resolution=(1440, 810)),
     '矛头分队': Template(r"tpl1664633339712.png", record_pos=(0.16, -0.023), resolution=(2376, 1152)),
     '突击分队': Template(r"tpl1664621986803.png", record_pos=(0.398, -0.021), resolution=(2376, 1152)),
     '堡垒分队': Template(r"tpl1664633447533.png", record_pos=(-0.305, -0.021), resolution=(2376, 1152)),
     '远程分队': Template(r"tpl1664633473987.png", record_pos=(-0.161, -0.021), resolution=(2376, 1152)),
-    '研究分队': Template(r"tpl1664634481772.png", record_pos=(-0.16, -0.018), resolution=(2376, 1152)),
+    '研究分队': Template(r"tpl1664716000602.png", record_pos=(0.02, 0.004), resolution=(1440, 810)),
     '高规格分队': Template(r"tpl1664633527096.png", record_pos=(0.206, -0.021), resolution=(2376, 1152)),
 }
 
