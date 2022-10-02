@@ -158,9 +158,13 @@ class NeedOpenSkillAgent(Agent):
                 return
             sleep(1)
             sleep_time = sleep_time + 1
-        touch(agentPosition)
-        sleep(1)
-        touch(self.skillMark4Release)
+        skillMarkPosition = exists(self.skillMark4Release)
+        while not skillMarkPosition:
+            touch(agentPosition)
+            sleep(1)
+            skillMarkPosition = exists(self.skillMark4Release)
+            continue
+        touch(skillMarkPosition)
 
 # -- 关卡攻略类型模板 --
 # 基础关卡攻略模板
@@ -301,7 +305,7 @@ class EventStrategy(Strategy):
         checkButtonPosition = exists(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))
         while not checkButtonPosition:
             touch(touchPosition)
-            touchPosition = (touchPosition[0], touchPosition[1] - 160)
+            touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))
         touch(checkButtonPosition)
         keepTouchIfExist(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))

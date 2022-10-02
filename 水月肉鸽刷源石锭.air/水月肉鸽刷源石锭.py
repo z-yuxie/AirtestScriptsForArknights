@@ -13,7 +13,7 @@ mobileType = 'mumu1440x810'
 # 分队类型，可选类型参考下面746行内部的配置
 teamType = '后勤分队'
 # 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔', '海沫', '精一海沫',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
-useAgents = ('时装笔', '羽毛笔', '海沫', '精一海沫',)
+useAgents = ('书山', '时装笔', '羽毛笔', '海沫', '精一海沫',)
 # 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
 fastMatchStrategy = True
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
@@ -151,15 +151,19 @@ class NeedOpenSkillAgent(Agent):
     # 重写开技能的逻辑
     def releaseSkill(self, agentPosition):
         sleep_time = 0
-        while not exists(Template(r"tpl1653728387510.png", record_pos=(-0.169, -0.135), resolution=(2376, 1152))):
+        while not exists(Template(r"tpl1664729470691.png", record_pos=(0.258, -0.041), resolution=(1440, 810))):
             # 等待技能时间最长不超过3分钟，否则退出技能释放判定，避免干员在开技能之前就挂掉后导致脚本卡住
             if sleep_time >= 50:
                 return
             sleep(1)
             sleep_time = sleep_time + 1
-        touch(agentPosition)
-        sleep(1)
-        touch(self.skillMark4Release)
+        skillMarkPosition = exists(self.skillMark4Release)
+        while not skillMarkPosition:
+            touch(agentPosition)
+            sleep(1)
+            skillMarkPosition = exists(self.skillMark4Release)
+            continue
+        touch(skillMarkPosition)
 
 # -- 关卡攻略类型模板 --
 # 基础关卡攻略模板
@@ -214,7 +218,7 @@ class BattleStrategy(Strategy):
         sleep(1.0)
         touch(Template(r"tpl1641988492692.png", record_pos=(0.322, 0.242), resolution=(1440, 810)))
         while not exists(Template(r"tpl1646226625337.png", threshold=0.9000000000000001, record_pos=(0.044, -0.258), resolution=(1440, 810))):
-            sleep(1)  
+            sleep(1)
         sleep(2)
         touch(Template(r"tpl1646126432694.png", threshold=0.9000000000000001, record_pos=(0.362, -0.25), resolution=(1440, 810)))
         sleep(0.5)
@@ -303,7 +307,7 @@ class EventStrategy(Strategy):
         checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
         while not checkButtonPosition:
             touch(touchPosition)
-            touchPosition = (touchPosition[0], touchPosition[1] - 160)
+            touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
         touch(checkButtonPosition)
         keepTouchIfExist(Template(r"tpl1664621247885.png", record_pos=(-0.004, 0.189), resolution=(2376, 1152)))
@@ -715,8 +719,8 @@ supportMobilePositionConfigs = {
         },
         '虫群横行': {
             '干员上场位置': (1171,425),
-            '干员朝向位置': (1700,445),
-            '干员站场位置': (1089,1000)
+            '干员朝向位置': (1000,445),
+            '干员站场位置': (1090,460)
         },
         '共生': {
             '干员上场位置': (820,448),
