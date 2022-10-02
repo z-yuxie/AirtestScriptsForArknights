@@ -612,7 +612,7 @@ def exitExploration(basePositions):
         confirmationTaskOver()
         sleep(1)
         continue
-    touch(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
+    keepTouchIfExist(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
     while not exists(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152))):
         touch(screenCenter)
         sleep(1.0)
@@ -778,14 +778,14 @@ strategies = (
 
 # 可选分队配置
 teamTypeMap = {
-    '心胜于物': Template(r"tpl1664634570362.png", record_pos=(-0.39, -0.013), resolution=(2376, 1152)),
-    '物尽其用': Template(r"tpl1664634556665.png", record_pos=(-0.205, -0.016), resolution=(2376, 1152)),
-    '以人为本': Template(r"tpl1664634538188.png", record_pos=(-0.023, -0.017), resolution=(2376, 1152)),
+    '心胜于物': Template(r"tpl1664724982899.png", record_pos=(-0.365, 0.007), resolution=(1440, 810)),
+    '物尽其用': Template(r"tpl1664724968725.png", record_pos=(-0.143, 0.002), resolution=(1440, 810)),
+    '以人为本': Template(r"tpl1664724955344.png", record_pos=(0.077, 0.003), resolution=(1440, 810)),
     '指挥分队': Template(r"tpl1664715961278.png", record_pos=(-0.312, 0.005), resolution=(1440, 810)),
     '集群分队': Template(r"tpl1664715986102.png", record_pos=(-0.09, 0.009), resolution=(1440, 810)),
     '后勤分队': Template(r"tpl1664715972862.png", record_pos=(0.132, 0.003), resolution=(1440, 810)),
     '矛头分队': Template(r"tpl1664633339712.png", record_pos=(0.16, -0.023), resolution=(2376, 1152)),
-    '突击分队': Template(r"tpl1664621986803.png", record_pos=(0.398, -0.021), resolution=(2376, 1152)),
+    '突击分队': Template(r"tpl1664725005598.png", record_pos=(-0.219, -0.001), resolution=(1440, 810)),
     '堡垒分队': Template(r"tpl1664633447533.png", record_pos=(-0.305, -0.021), resolution=(2376, 1152)),
     '远程分队': Template(r"tpl1664633473987.png", record_pos=(-0.161, -0.021), resolution=(2376, 1152)),
     '研究分队': Template(r"tpl1664716000602.png", record_pos=(0.02, 0.004), resolution=(1440, 810)),
