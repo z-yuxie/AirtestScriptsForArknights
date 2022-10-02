@@ -428,13 +428,13 @@ def chooseHow2Explore(basePositions):
             tryTouch(teamTypeImg)
             #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
             sleep(1.0)
-            tryTouch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
+            tryTouch(Template(r"tpl1664723235127.png", record_pos=(0.064, 0.183), resolution=(1440, 810)))
             sleep(1.0)
             firstTeamTypePosition = exists(Template(r"tpl1641991034647.png", threshold=0.9000000000000001, record_pos=(0.11, 0.062), resolution=(1440, 810)))
             
     touch(firstTeamTypePosition)
     sleep(1.0)
-    touch(Template(r"tpl1641991004571.png", record_pos=(0.287, 0.182), resolution=(1440, 810)))
+    touch(Template(r"tpl1664723304259.png", record_pos=(0.11, 0.183), resolution=(1440, 810)))
     sleep(2.0)
 
 # 选择进行探索的近卫干员
@@ -775,15 +775,15 @@ strategies = (
 
 # 可选分队配置
 teamTypeMap = {
-    '指挥分队': Template(r"tpl1664633278257.png", record_pos=(-0.39, -0.028), resolution=(2376, 1152)),
-    '集群分队': Template(r"tpl1664633304152.png", record_pos=(-0.206, -0.022), resolution=(2376, 1152)),
-    '后勤分队': Template(r"tpl1664633324567.png", record_pos=(-0.024, -0.027), resolution=(2376, 1152)),
-    '矛头分队': Template(r"tpl1664633339712.png", record_pos=(0.16, -0.023), resolution=(2376, 1152)),
-    '突击分队': Template(r"tpl1664633388415.png", record_pos=(0.344, -0.023), resolution=(2376, 1152)),
-    '堡垒分队': Template(r"tpl1664633447533.png", record_pos=(-0.305, -0.021), resolution=(2376, 1152)),
-    '远程分队': Template(r"tpl1664633473987.png", record_pos=(-0.161, -0.021), resolution=(2376, 1152)),
-    '研究分队': Template(r"tpl1664633500946.png", record_pos=(0.02, -0.021), resolution=(2376, 1152)),
-    '高规格分队': Template(r"tpl1664633527096.png", record_pos=(0.206, -0.021), resolution=(2376, 1152)),
+    '指挥分队': Template(r"tpl1664723061892.png", record_pos=(-0.366, -0.007), resolution=(1440, 810)),
+    '集群分队': Template(r"tpl1664723079841.png", record_pos=(-0.142, 0.001), resolution=(1440, 810)),
+    '后勤分队': Template(r"tpl1664723089537.png", record_pos=(0.078, -0.006), resolution=(1440, 810)),
+    '矛头分队': Template(r"tpl1664723111226.png", record_pos=(0.299, -0.003), resolution=(1440, 810)),
+    '突击分队': Template(r"tpl1664723127239.png", record_pos=(-0.037, -0.008), resolution=(1440, 810)),
+    '堡垒分队': Template(r"tpl1664723142471.png", record_pos=(0.187, -0.003), resolution=(1440, 810)),
+    '远程分队': Template(r"tpl1664723173076.png", record_pos=(-0.009, -0.003), resolution=(1440, 810)),
+    '研究分队': Template(r"tpl1664723187046.png", record_pos=(0.211, -0.001), resolution=(1440, 810)),
+    '高规格分队': Template(r"tpl1664723200242.png", record_pos=(0.144, -0.003), resolution=(1440, 810)),
 }
 
 
