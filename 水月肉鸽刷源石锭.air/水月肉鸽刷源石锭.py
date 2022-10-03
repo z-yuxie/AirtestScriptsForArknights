@@ -220,7 +220,8 @@ class BattleStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        touch(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152)))
+        sleep(1.0)
+        keepTouchIfExist(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152)))
         sleep(1.0)
         touch(Template(r"tpl1641988492692.png", record_pos=(0.322, 0.242), resolution=(1440, 810)))
         checkKey()
@@ -306,7 +307,8 @@ class EventStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        touch(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
+        sleep(1.0)
+        keepTouchIfExist(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
         sleep(4.0)
         checkKey()
         touch(screenCenter)
@@ -347,7 +349,7 @@ class StoreStrategy(Strategy):
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
         sleep(1.0)
-        touch(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
+        keepTouchIfExist(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
         sleep(1.0)
         # 不可以投资时直接离开
         if not self.bankingSystemExist() or self.accountFull():
@@ -392,7 +394,8 @@ class StoreStrategy(Strategy):
     
     # 没钱了~~
     def lackOfMoney(self):
-        return exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
+        return exists(Template(r"tpl1664804448982.png", record_pos=(0.268, 0.104), resolution=(1440, 810)))
+#         return exists(Template(r"tpl1664804448982.png", record_pos=(0.268, 0.104), resolution=(1440, 810))) or exists(Template(r"tpl1664804482175.png", record_pos=(0.358, -0.263), resolution=(1440, 810)))
     
     # 投资系统崩溃
     def bankingSystemError(self):
@@ -587,17 +590,20 @@ def organizeIntoTeams(agent, basePositions):
 
 # 选择要攻略的关卡
 def chooseLevel(levelButtonPositions):
+    keyExistPosition = exists(Template(r"tpl1664619764166.png", record_pos=(-0.114, 0.04), resolution=(2376, 1152)))
     for position in levelButtonPositions:
         print('点击关卡按钮：')
         print(position)
+        if keyExistPosition:
+            xPositionDistance = keyExistPosition[0] - position[0]
+            yPositionDistance = position[0] - keyExistPosition[1]
+            if xPositionDistance >= 0 and xPositionDistance <= 150 and yPositionDistance >= 0 and yPositionDistance <= 70:
+                print('发现是钥匙关卡，跳过~')
+                continue
         touch(position)
+        if fastMatchStrategy:
+            continue
         if exists(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152))) or exists(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152))):
-            keyExistPosition = exists(Template(r"tpl1664619764166.png", record_pos=(-0.114, 0.04), resolution=(2376, 1152)))
-            if keyExistPosition:
-                xPositionDistance = keyExistPosition[0] - position[0]
-                yPositionDistance = position[0] - keyExistPosition[1]
-                if xPositionDistance >= 0 and xPositionDistance <= 150 and yPositionDistance >= 0 and yPositionDistance <= 70:
-                    continue
             break
 
 # 查找闯关攻略
@@ -628,15 +634,18 @@ def tryChallenge(strategy, agent, mobilePositionConfig):
     return strategy.challenge(agent, mobilePositionConfig['基础位置配置'], targetPositions)
 
 # 确认任务完成提示
-def confirmationTaskOver():
-    keepTouchIfExist(Template(r"tpl1664629696929.png", record_pos=(0.01, -0.051), resolution=(2376, 1152)))
+def confirmationTaskOver(basePositions):
+    # 退出任务结算界面
+    while exists(Template(r"tpl1664629696929.png", record_pos=(0.01, -0.051), resolution=(2376, 1152))):
+        touch(basePositions['右下角一个没有按钮的位置'])
+        continue
 
 
 # 退出本轮探索
 def exitExploration(basePositions):
     while not exists(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810))):
         tryTouch(Template(r"tpl1664618931541.png", record_pos=(-0.004, 0.188), resolution=(2376, 1152)))
-        confirmationTaskOver()
+        confirmationTaskOver(basePositions)
         sleep(1)
         continue
     keepTouchIfExist(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
@@ -680,19 +689,19 @@ supportMobilePositionConfigs = {
     'Mate40Pro异形屏0': {
         '基础位置配置': {
             '右滑屏幕起始点': (1150,500),
-            '关卡奖励列表的第一个接受按钮': (255,860),
+            '右下角一个没有按钮的位置': (80,920),
             '第一个加人入队按钮': (535,260),
             '待入队干员技能选择栏坐标': (250,830)
         },
         '关卡按钮的可能位置':[
             (800,520),
-            (1500,430),
-            (1500,620),
-            (1500,520),
-            (1500,340),
-            (1500,715),
-            (1500,210),
-            (1500,835),
+            (1600,430),
+            (1600,620),
+            (1600,520),
+            (1600,340),
+            (1600,715),
+            (1600,210),
+            (1600,835),
         ],
         '射手部队': {
             '干员上场位置': (1790,490),
@@ -705,9 +714,9 @@ supportMobilePositionConfigs = {
             '干员站场位置': (1530,650)
         },
         '共生': {
-            '干员上场位置': (1500,800),
-            '干员朝向位置': (1050,800),
-            '干员站场位置': (1370,800)
+            '干员上场位置': (1325,650),
+            '干员朝向位置': (1300,320),
+            '干员站场位置': (1190,650)
         },
         '蓄水池': {
             '干员上场位置': (1680,739),
@@ -721,19 +730,19 @@ supportMobilePositionConfigs = {
     'mumu1440x810': {
         '基础位置配置': {
             '右滑屏幕起始点': (670,500),
-            '关卡奖励列表的第一个接受按钮': (185,620),
+            '右下角一个没有按钮的位置': (80,690),
             '第一个加人入队按钮': (250,190),
             '待入队干员技能选择栏坐标': (200,600)
         },
         '关卡按钮的可能位置':[
             (440,370),
-            (880,290),
-            (880,440),
-            (880,370),
-            (880,210),
-            (880,510),
-            (880,140),
-            (880,590),
+            (965,290),
+            (965,440),
+            (965,370),
+            (965,210),
+            (965,510),
+            (965,140),
+            (965,590),
         ],
         '射手部队': {
             '干员上场位置': (1148,328),
@@ -791,15 +800,15 @@ scriptSupportAgents = {
 
 # 待选关卡攻略列表
 strategies = (
-    StoreStrategy('商店', Template(r"tpl1642255403039.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
-    EventStrategy('不期而遇', Template(r"tpl1642143362809.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
+    StoreStrategy('商店', Template(r"tpl1664804329844.png", record_pos=(0.237, -0.126), resolution=(1440, 810))),
+    EventStrategy('不期而遇', Template(r"tpl1664804304344.png", record_pos=(0.237, -0.128), resolution=(1440, 810))),
     BattleStrategy('射手部队', Template(r"tpl1664615340761.png", record_pos=(0.324, -0.115), resolution=(2376, 1152))),
 
     BattleStrategy('虫群横行', Template(r"tpl1664615121123.png", record_pos=(0.326, -0.102), resolution=(2376, 1152))),
     BattleStrategy('共生', Template(r"tpl1664285540176.png", record_pos=(0.262, -0.126), resolution=(1440, 810))),
     BattleStrategy('蓄水池', Template(r"tpl1664285203156.png", record_pos=(0.264, -0.125), resolution=(1440, 810))),
-    EventStrategy('幕间余兴', Template(r"tpl1664296276912.png", record_pos=(0.294, -0.129), resolution=(1440, 810))),
-    EventStrategy('幕间余兴', Template(r"tpl1664488355055.png", record_pos=(0.293, -0.129), resolution=(1440, 810))),
+    EventStrategy('幕间余兴', Template(r"tpl1664795831488.png", record_pos=(0.24, -0.128), resolution=(1440, 810))),
+    EventStrategy('幕间余兴', Template(r"tpl1664799167543.png", record_pos=(0.283, -0.106), resolution=(2376, 1152))),
     EventStrategy('幕间余兴', Template(r"tpl1664544319322.png", record_pos=(0.292, -0.129), resolution=(1440, 810)))
 )
 
@@ -852,7 +861,7 @@ if __name__ == "__main__":
         # 不断挑战本轮探索内的关卡, 直到关底或者攻略关卡失败
         while(True):
             # 确认任务完成提示信息
-            confirmationTaskOver()
+            confirmationTaskOver(mobilePositionConfig['基础位置配置'])
             # 点击选中本次挑战关卡
             chooseLevel(mobilePositionConfig['关卡按钮的可能位置'])
             # 查找关卡攻略

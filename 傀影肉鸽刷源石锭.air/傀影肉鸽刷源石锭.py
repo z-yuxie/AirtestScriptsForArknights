@@ -307,12 +307,18 @@ class EventStrategy(Strategy):
         touch(screenCenter)
         sleep(3.0)
         touchPosition = targetPositions['最下面选项的位置']
-        checkButtonPosition = exists(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))
+        checkButtonPosition = exists(Template(r"tpl1664796419044.png", record_pos=(0.433, 0.128), resolution=(1440, 810)))
         while not checkButtonPosition:
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
-            checkButtonPosition = exists(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))
+            checkButtonPosition = exists(Template(r"tpl1664796419044.png", record_pos=(0.433, 0.128), resolution=(1440, 810)))
         touch(checkButtonPosition)
+        sleep(1)
+        # 进到干员选择界面时，退出干员选择界面
+        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
+            sleep(1)
+            abandonRecruitment()
+            continue
         keepTouchIfExist(Template(r"tpl1646274575137.png", threshold=0.9000000000000001, record_pos=(0.435, 0.205), resolution=(1440, 810)))
         sleep(4.0)
         keepTouchIfExist(Template(r"tpl1641987578489.png", record_pos=(0.0, 0.232), resolution=(1440, 810)))
@@ -378,8 +384,7 @@ class StoreStrategy(Strategy):
     
     # 没钱了~~
     def lackOfMoney(self):
-        def lackOfMoney(self):
-        return exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
+        return exists(Template(r"tpl1664804448982.png", record_pos=(0.268, 0.104), resolution=(1440, 810)))
     
     # 投资系统崩溃
     def bankingSystemError(self):
@@ -573,8 +578,9 @@ def chooseLevel(levelButtonPositions):
         print('点击关卡按钮：')
         print(position)
         touch(position)
-        if exists(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810))) or exists(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152))):
-            break
+        # 如果经常出现关卡没选上的情况，就解开下面两行代码的注释
+#         if exists(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810))) or exists(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152))):
+#             break
 
 # 查找闯关攻略
 def findStrategy():
@@ -650,19 +656,19 @@ supportMobilePositionConfigs = {
     'Mate40Pro异形屏0': {
         '基础位置配置': {
             '右滑屏幕起始点': (1150,500),
-            '关卡奖励列表的第一个接受按钮': (255,860),
+            '右下角一个没有按钮的位置': (80,920),
             '第一个加人入队按钮': (535,260),
             '待入队干员技能选择栏坐标': (250,830)
         },
         '关卡按钮的可能位置':[
             (800,520),
-            (1500,430),
-            (1500,620),
-            (1500,520),
-            (1500,340),
-            (1500,715),
-            (1500,210),
-            (1500,835),
+            (1600,430),
+            (1600,620),
+            (1600,520),
+            (1600,340),
+            (1600,715),
+            (1600,210),
+            (1600,835),
         ],
         '礼炮小队': {
             '干员上场位置': (990,570),
@@ -696,19 +702,19 @@ supportMobilePositionConfigs = {
     'mumu1440x810': {
         '基础位置配置': {
             '右滑屏幕起始点': (670,500),
-            '关卡奖励列表的第一个接受按钮': (185,620),
+            '右下角一个没有按钮的位置': (80,690),
             '第一个加人入队按钮': (250,190),
             '待入队干员技能选择栏坐标': (200,600)
         },
         '关卡按钮的可能位置':[
             (440,370),
-            (880,290),
-            (880,440),
-            (880,370),
-            (880,210),
-            (880,510),
-            (880,140),
-            (880,590),
+            (965,290),
+            (965,440),
+            (965,370),
+            (965,210),
+            (965,510),
+            (965,140),
+            (965,590),
         ],
         '礼炮小队': {
             '干员上场位置': (575,386),
