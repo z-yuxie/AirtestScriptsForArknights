@@ -399,8 +399,9 @@ class StoreStrategy(Strategy):
 
     # 退出商店
     def exitStore(self):
-        tryTouch(Template(r"tpl1649060580969.png", threshold=0.9000000000000001, record_pos=(0.452, 0.145), resolution=(1440, 810)))
-        tryTouch(Template(r"tpl1649060602062.png", threshold=0.9000000000000001, record_pos=(0.426, 0.145), resolution=(1440, 810)))
+        tryTouch(Template(r"tpl1664764967407.png", record_pos=(0.418, 0.147), resolution=(1440, 810)))
+        sleep(1)
+        keepTouchIfExist(Template(r"tpl1664764990937.png", record_pos=(0.39, 0.144), resolution=(1440, 810)))
         sleep(5.0)
     
     # 是否是最后的关底攻略
@@ -579,8 +580,8 @@ def chooseLevel(levelButtonPositions):
         print(position)
         touch(position)
         # 如果经常出现关卡没选上的情况，就解开下面两行代码的注释
-#         if exists(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810))) or exists(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152))):
-#             break
+        if exists(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810))) or exists(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152))):
+            break
 
 # 查找闯关攻略
 def findStrategy():

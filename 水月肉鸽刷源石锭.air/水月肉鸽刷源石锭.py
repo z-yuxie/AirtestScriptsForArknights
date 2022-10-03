@@ -411,7 +411,8 @@ class StoreStrategy(Strategy):
     # 退出商店
     def exitStore(self):
         tryTouch(Template(r"tpl1664764967407.png", record_pos=(0.418, 0.147), resolution=(1440, 810)))
-        tryTouch(Template(r"tpl1664764990937.png", record_pos=(0.39, 0.144), resolution=(1440, 810)))
+        sleep(1)
+        keepTouchIfExist(Template(r"tpl1664764990937.png", record_pos=(0.39, 0.144), resolution=(1440, 810)))
         sleep(5.0)
     
     # 是否是最后的关底攻略
