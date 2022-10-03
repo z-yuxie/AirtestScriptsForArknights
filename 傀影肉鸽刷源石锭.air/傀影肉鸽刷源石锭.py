@@ -136,10 +136,15 @@ class Agent:
         while not positionInTeam:
             sleep(0.5)
             positionInTeam = exists(self.wait4EnterMark)
-        # 下次更新需要在此处加一个干员上场失败的判断，判断的方式是检测场上是否存在干员的小人
-        swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
-        sleep(0.5)
-        swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+            continue
+        # 尝试让干员上场战斗，如果上场失败会进行重试
+        while(positionInTeam):
+            swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
+            sleep(0.5)
+            swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+            positionInTeam = exists(self.wait4EnterMark)
+            continue
+        re
 
     # 基础干员默认不需要开技能
     def releaseSkill(self, agentPosition):
@@ -338,7 +343,7 @@ class StoreStrategy(Strategy):
         self.openBankingSystem()
         self.ready2Investment()
         for i in range(5):
-            if self.bankingSystemError() or self.accountFullNeedStopInvestment():
+            if self.bankingSystemError() or self.accountFullNeedStopInvestment() or self.lackOfMoney():
                 break
             self.determineInvestment()
         self.closeBankingSystem()
@@ -370,6 +375,10 @@ class StoreStrategy(Strategy):
     # 投资账户已满，停止投资
     def accountFullNeedStopInvestment(self):
         return exists(Template(r"tpl1653811751848.png", record_pos=(0.222, 0.004), resolution=(2376, 1152)))
+    
+    # 没钱了~~
+    def lackOfMoney(self):
+        return exists(Template(r"tpl20221003082714.png", record_pos=(0.222, 0.004), resolution=(2376, 1152)))
     
     # 投资系统崩溃
     def bankingSystemError(self):
@@ -842,6 +851,7 @@ if __name__ == "__main__":
             exitExploration(mobilePositionConfig['基础位置配置'])
         # 结束本轮探索并结算本轮探索收益
         settlementExplorationIncome()
+
 
 
 

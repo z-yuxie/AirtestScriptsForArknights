@@ -11,13 +11,13 @@ auto_setup(__file__)
 # mobileType = 'Mate40Pro异形屏0'
 mobileType = 'mumu1440x810'
 # 分队类型，可选类型参考下面746行内部的配置
-teamType = '后勤分队'
+teamType = '心胜于物'
 # 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔', '海沫', '精一海沫',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
 useAgents = ('时装笔', '羽毛笔', '海沫', '精一海沫',)
 # 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
 fastMatchStrategy = True
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
-onlyAssist = False
+onlyAssist = True
 
 
 # ----- 通用的一些操作 -----
@@ -135,10 +135,16 @@ class Agent:
         while not positionInTeam:
             sleep(0.5)
             positionInTeam = exists(self.wait4EnterMark)
-        # 下次更新需要在此处加一个干员上场失败的判断，判断的方式是检测场上是否存在干员的小人
-        swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
-        sleep(0.5)
-        swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+            continue
+        # 尝试让干员上场战斗，如果上场失败会进行重试
+        while(positionInTeam):
+            swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
+            sleep(0.5)
+            swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
+            positionInTeam = exists(self.wait4EnterMark)
+            
+            continue
+        return
 
     # 基础干员默认不需要开技能
     def releaseSkill(self, agentPosition):
@@ -310,6 +316,12 @@ class EventStrategy(Strategy):
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
         touch(checkButtonPosition)
+        sleep(1.0)
+        # 进到干员选择界面时，退出干员选择界面
+        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
+            sleep(1)
+            abandonRecruitment()
+            continue
         keepTouchIfExist(Template(r"tpl1664621247885.png", record_pos=(-0.004, 0.189), resolution=(2376, 1152)))
         sleep(4.0)
         # 备用截图
@@ -343,7 +355,7 @@ class StoreStrategy(Strategy):
         self.openBankingSystem()
         self.ready2Investment()
         for i in range(5):
-            if self.bankingSystemError() or self.accountFullNeedStopInvestment():
+            if self.bankingSystemError() or self.accountFullNeedStopInvestment() or self.lackOfMoney():
                 break
             self.determineInvestment()
         self.closeBankingSystem()
@@ -376,6 +388,10 @@ class StoreStrategy(Strategy):
     def accountFullNeedStopInvestment(self):
         return exists(Template(r"tpl1653811751848.png", record_pos=(0.222, 0.004), resolution=(2376, 1152)))
     
+    # 没钱了~~
+    def lackOfMoney(self):
+        return exists(Template(r"tpl20221003082714.png", record_pos=(0.222, 0.004), resolution=(2376, 1152)))
+    
     # 投资系统崩溃
     def bankingSystemError(self):
         return exists(Template(r"tpl1641989989616.png", threshold=0.9000000000000001, record_pos=(0.113, -0.04), resolution=(1440, 810)))
@@ -389,8 +405,8 @@ class StoreStrategy(Strategy):
 
     # 退出商店
     def exitStore(self):
-        tryTouch(Template(r"tpl1649060580969.png", threshold=0.9000000000000001, record_pos=(0.452, 0.145), resolution=(1440, 810)))
-        tryTouch(Template(r"tpl1649060602062.png", threshold=0.9000000000000001, record_pos=(0.426, 0.145), resolution=(1440, 810)))
+        tryTouch(Template(r"tpl1664764967407.png", record_pos=(0.418, 0.147), resolution=(1440, 810)))
+        tryTouch(Template(r"tpl1664764990937.png", record_pos=(0.39, 0.144), resolution=(1440, 810)))
         sleep(5.0)
     
     # 是否是最后的关底攻略
@@ -573,7 +589,7 @@ def chooseLevel(levelButtonPositions):
             if keyExistPosition:
                 xPositionDistance = keyExistPosition[0] - position[0]
                 yPositionDistance = position[0] - keyExistPosition[1]
-                if xPositionDistance >= 0 and xPositionDistance <= 140 and yPositionDistance >= 0 and yPositionDistance <= 60:
+                if xPositionDistance >= 0 and xPositionDistance <= 150 and yPositionDistance >= 0 and yPositionDistance <= 70:
                     continue
             break
 
@@ -612,7 +628,7 @@ def confirmationTaskOver():
 # 退出本轮探索
 def exitExploration(basePositions):
     while not exists(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810))):
-        keepTouchIfExist(Template(r"tpl1664618931541.png", record_pos=(-0.004, 0.188), resolution=(2376, 1152)))
+        tryTouch(Template(r"tpl1664618931541.png", record_pos=(-0.004, 0.188), resolution=(2376, 1152)))
         confirmationTaskOver()
         sleep(1)
         continue
@@ -641,7 +657,7 @@ def settlementExplorationIncome():
     sleep(3.0)
     keepTouchIfExist(Template(r"tpl1646104849842.png", threshold=0.9000000000000001, record_pos=(0.001, -0.204), resolution=(1440, 810)))
     if not exists(Template(r"tpl1664692893761.png", record_pos=(0.024, -0.047), resolution=(2376, 1152))):
-        tryTouch(Template(r"tpl1664691482613.png", record_pos=(-0.04, 0.178), resolution=(2376, 1152)))
+        tryTouch(Template(r"tpl1664767874603.png", record_pos=(0.044, 0.194), resolution=(1440, 810)))
         tryTouch(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152)))
         
     while exists(Template(r"tpl1664611772895.png", record_pos=(0.427, 0.145), resolution=(2376, 1152))):
@@ -769,12 +785,12 @@ scriptSupportAgents = {
 # 待选关卡攻略列表
 strategies = (
     StoreStrategy('商店', Template(r"tpl1642255403039.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
+    EventStrategy('不期而遇', Template(r"tpl1642143362809.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
     BattleStrategy('射手部队', Template(r"tpl1664615340761.png", record_pos=(0.324, -0.115), resolution=(2376, 1152))),
 
     BattleStrategy('虫群横行', Template(r"tpl1664615121123.png", record_pos=(0.326, -0.102), resolution=(2376, 1152))),
     BattleStrategy('共生', Template(r"tpl1664285540176.png", record_pos=(0.262, -0.126), resolution=(1440, 810))),
     BattleStrategy('蓄水池', Template(r"tpl1664285203156.png", record_pos=(0.264, -0.125), resolution=(1440, 810))),
-    EventStrategy('不期而遇', Template(r"tpl1642143362809.png", threshold=0.9000000000000001, record_pos=(0.247, -0.144), resolution=(1440, 810))),
     EventStrategy('幕间余兴', Template(r"tpl1664296276912.png", record_pos=(0.294, -0.129), resolution=(1440, 810))),
     EventStrategy('幕间余兴', Template(r"tpl1664488355055.png", record_pos=(0.293, -0.129), resolution=(1440, 810))),
     EventStrategy('幕间余兴', Template(r"tpl1664544319322.png", record_pos=(0.292, -0.129), resolution=(1440, 810)))
@@ -850,6 +866,7 @@ if __name__ == "__main__":
             exitExploration(mobilePositionConfig['基础位置配置'])
         # 结束本轮探索并结算本轮探索收益
         settlementExplorationIncome()
+
 
 
 
