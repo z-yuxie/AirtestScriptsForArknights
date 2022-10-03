@@ -312,11 +312,11 @@ class EventStrategy(Strategy):
         touch(screenCenter)
         sleep(3.0)
         touchPosition = targetPositions['最下面选项的位置']
-        checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
+        checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
         while not checkButtonPosition:
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
-            checkButtonPosition = exists(Template(r"tpl1664718568614.png", record_pos=(0.435, 0.101), resolution=(1440, 810)))
+            checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
         touch(checkButtonPosition)
         sleep(1.0)
         # 进到干员选择界面时，退出干员选择界面
@@ -392,7 +392,7 @@ class StoreStrategy(Strategy):
     
     # 没钱了~~
     def lackOfMoney(self):
-        return exists(Template(r"tpl1664773658507.png", record_pos=(0.332, -0.259), resolution=(1440, 810))) or exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
+        return exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
     
     # 投资系统崩溃
     def bankingSystemError(self):
