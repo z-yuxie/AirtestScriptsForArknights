@@ -580,8 +580,8 @@ def chooseLevel(levelButtonPositions):
         print(position)
         touch(position)
         # 如果经常出现关卡没选上的情况，就解开下面两行代码的注释
-        if exists(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810))) or exists(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152))):
-            break
+#         if exists(Template(r"tpl1641987478502.png", record_pos=(0.395, 0.096), resolution=(1440, 810))) or exists(Template(r"tpl1653800722713.png", record_pos=(0.415, 0.08), resolution=(2376, 1152))):
+#             break
 
 # 查找闯关攻略
 def findStrategy():
@@ -709,13 +709,13 @@ supportMobilePositionConfigs = {
         },
         '关卡按钮的可能位置':[
             (440,370),
-            (965,290),
-            (965,440),
-            (965,370),
-            (965,210),
-            (965,510),
-            (965,140),
-            (965,590),
+            (880,290),
+            (880,440),
+            (880,370),
+            (880,210),
+            (880,510),
+            (880,140),
+            (880,590),
         ],
         '礼炮小队': {
             '干员上场位置': (575,386),
