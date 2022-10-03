@@ -144,7 +144,7 @@ class Agent:
             swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
             positionInTeam = exists(self.wait4EnterMark)
             continue
-        re
+        return
 
     # 基础干员默认不需要开技能
     def releaseSkill(self, agentPosition):
@@ -378,7 +378,8 @@ class StoreStrategy(Strategy):
     
     # 没钱了~~
     def lackOfMoney(self):
-        return exists(Template(r"tpl20221003082714.png", record_pos=(0.222, 0.004), resolution=(2376, 1152)))
+        def lackOfMoney(self):
+        return exists(Template(r"tpl1664773658507.png", record_pos=(0.332, -0.259), resolution=(1440, 810))) or exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
     
     # 投资系统崩溃
     def bankingSystemError(self):

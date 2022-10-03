@@ -17,7 +17,7 @@ useAgents = ('时装笔', '羽毛笔', '海沫', '精一海沫',)
 # 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
 fastMatchStrategy = True
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
-onlyAssist = True
+onlyAssist = False
 
 
 # ----- 通用的一些操作 -----
@@ -43,7 +43,7 @@ def tryTouch(img):
 
 # 从右向左滑动屏幕，使屏幕右侧的内容可以显示出来
 def swipe2Right(startPosition):
-    swipe(startPosition, vector=[-0.2,0])
+    swipe(startPosition, vector=[-0.5,0])
 
 # 如果目标图片存在，就一直点击该图片，直到该图片消失
 def keepTouchIfExist(img):
@@ -223,6 +223,7 @@ class BattleStrategy(Strategy):
         touch(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152)))
         sleep(1.0)
         touch(Template(r"tpl1641988492692.png", record_pos=(0.322, 0.242), resolution=(1440, 810)))
+        checkKey()
         while not exists(Template(r"tpl1646226625337.png", threshold=0.9000000000000001, record_pos=(0.044, -0.258), resolution=(1440, 810))):
             sleep(1)
         sleep(2)
@@ -264,9 +265,9 @@ class BattleStrategy(Strategy):
         keepTouchIfExist(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152)))
         keepTouchIfExist(Template(r"tpl1664621606838.png", record_pos=(-0.398, 0.107), resolution=(2376, 1152)))
         # 判断是否进入到剧目
-        keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
+#         keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
         # 判断是否误点宝箱
-        keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
+#         keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
         # 不小心进到干员选择界面时，退出干员选择界面
         while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
             sleep(1)
@@ -307,6 +308,7 @@ class EventStrategy(Strategy):
     def challenge(self, agent, basePositions, targetPositions):
         touch(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
         sleep(4.0)
+        checkKey()
         touch(screenCenter)
         sleep(3.0)
         touchPosition = targetPositions['最下面选项的位置']
@@ -390,7 +392,7 @@ class StoreStrategy(Strategy):
     
     # 没钱了~~
     def lackOfMoney(self):
-        return exists(Template(r"tpl20221003082714.png", record_pos=(0.222, 0.004), resolution=(2376, 1152)))
+        return exists(Template(r"tpl1664773658507.png", record_pos=(0.332, -0.259), resolution=(1440, 810))) or exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
     
     # 投资系统崩溃
     def bankingSystemError(self):
@@ -415,6 +417,11 @@ class StoreStrategy(Strategy):
 
 
 # ----- 刷取过程的一些关键步骤 -----
+
+# 判定钥匙解锁
+def checkKey():
+    if exists(Template(r"tpl1664772524409.png", record_pos=(-0.043, -0.01), resolution=(1440, 810))):
+        keepTouchIfExist(Template(r"tpl1664772572304.png", record_pos=(0.251, 0.106), resolution=(1440, 810)))
 
 # 确认进行探索
 def confirmExploration(basePositions):
