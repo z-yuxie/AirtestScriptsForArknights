@@ -13,7 +13,7 @@ mobileType = 'mumu1440x810'
 # 分队类型，可选类型参考下面746行内部的配置
 teamType = '后勤分队'
 # 备选干员（可多选）支持以下几种('书山', '山', '皮山', '时装笔', '羽毛笔', '海沫', '精一海沫',) 注意：由于元组的特殊性，建议在每个干员名字后面都加一个逗号，避免只放一个干员名字的时候出现错误
-useAgents = ('书山', '时装笔', '羽毛笔', '海沫', '精一海沫',)
+useAgents = ('时装笔', '羽毛笔', '海沫', '精一海沫',)
 # 是否开启关卡快速匹配模式，如果经常出现关卡匹配错误的情况，则把此项设置为False，这会提升关卡匹配的准确性，但会导致进入关卡前匹配关卡的时间变得很长
 fastMatchStrategy = True
 # 是否只进行助战招募，如果有大佬好友，且前面这些干员自己都没有或者都练度不够的情况下可以设置为True，这样就能直接进行助战招募而不会招募自己的干员
@@ -641,8 +641,8 @@ def settlementExplorationIncome():
     sleep(3.0)
     keepTouchIfExist(Template(r"tpl1646104849842.png", threshold=0.9000000000000001, record_pos=(0.001, -0.204), resolution=(1440, 810)))
     if not exists(Template(r"tpl1664692893761.png", record_pos=(0.024, -0.047), resolution=(2376, 1152))):
-        keepTouchIfExist(Template(r"tpl1664691482613.png", record_pos=(-0.04, 0.178), resolution=(2376, 1152)))
-        keepTouchIfExist(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152)))
+        tryTouch(Template(r"tpl1664691482613.png", record_pos=(-0.04, 0.178), resolution=(2376, 1152)))
+        tryTouch(Template(r"tpl1654246321136.png", record_pos=(-0.0, 0.186), resolution=(2376, 1152)))
         
     while exists(Template(r"tpl1664611772895.png", record_pos=(0.427, 0.145), resolution=(2376, 1152))):
         sleep(60)
