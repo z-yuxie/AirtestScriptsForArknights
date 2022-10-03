@@ -44,7 +44,7 @@ def tryTouch(img):
 
 # 从右向左滑动屏幕，使屏幕右侧的内容可以显示出来
 def swipe2Right(startPosition):
-    swipe(startPosition, vector=[-0.2,0])
+    swipe(startPosition, vector=[-0.45,0])
 
 # 如果目标图片存在，就一直点击该图片，直到该图片消失
 def keepTouchIfExist(img):
@@ -379,7 +379,7 @@ class StoreStrategy(Strategy):
     # 没钱了~~
     def lackOfMoney(self):
         def lackOfMoney(self):
-        return exists(Template(r"tpl1664773658507.png", record_pos=(0.332, -0.259), resolution=(1440, 810))) or exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
+        return exists(Template(r"tpl1664773604582.png", record_pos=(0.267, 0.102), resolution=(1440, 810)))
     
     # 投资系统崩溃
     def bankingSystemError(self):

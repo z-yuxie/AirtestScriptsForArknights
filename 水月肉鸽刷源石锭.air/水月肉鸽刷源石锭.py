@@ -43,7 +43,7 @@ def tryTouch(img):
 
 # 从右向左滑动屏幕，使屏幕右侧的内容可以显示出来
 def swipe2Right(startPosition):
-    swipe(startPosition, vector=[-0.5,0])
+    swipe(startPosition, vector=[-0.45,0])
 
 # 如果目标图片存在，就一直点击该图片，直到该图片消失
 def keepTouchIfExist(img):
