@@ -269,9 +269,7 @@ class BattleStrategy(Strategy):
         # 判断是否误点宝箱
 #         keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
         # 不小心进到干员选择界面时，退出干员选择界面
-        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
-            sleep(1)
-            abandonRecruitment()
+        abandonRecruitment()
         allAccept = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         if not allAccept:
