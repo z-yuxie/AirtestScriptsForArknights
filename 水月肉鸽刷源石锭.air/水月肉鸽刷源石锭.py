@@ -47,11 +47,13 @@ def swipe2Right(startPosition):
 
 # 如果目标图片存在，就一直点击该图片，直到该图片消失
 def keepTouchIfExist(img):
+    count = 0
     position = exists(img)
-    while position:
+    while position and count < 10:
         touch(position)
         sleep(1.5)
         position = exists(img)
+        count = count + 1
 
 # ----- 基础类型 -----
 # -- 干员类型模板 --
@@ -142,7 +144,6 @@ class Agent:
             sleep(0.5)
             swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
             positionInTeam = exists(self.wait4EnterMark)
-            
             continue
         return
 
@@ -265,8 +266,6 @@ class BattleStrategy(Strategy):
         keepTouchIfExist(Template(r"tpl1653115016616.png", record_pos=(-0.354, 0.015), resolution=(2242, 1080)))
         keepTouchIfExist(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152)))
         keepTouchIfExist(Template(r"tpl1664621606838.png", record_pos=(-0.398, 0.107), resolution=(2376, 1152)))
-        # 判断是否进入到剧目
-#         keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
         # 判断是否误点宝箱
 #         keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
         # 不小心进到干员选择界面时，退出干员选择界面
@@ -277,14 +276,14 @@ class BattleStrategy(Strategy):
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         if not allAccept:
             #判断有没有这个图片
-            exitButtonPosition = exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810)))
+            exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
             while not exitButtonPosition:
                 swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
-                exitButtonPosition = exists(Template(r"tpl1641989331329.png", record_pos=(0.296, 0.07), resolution=(1440, 810)))
+                exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
             else:
                 touch(exitButtonPosition)#判断到了就点它
             sleep(0.5)
-            touch(Template(r"tpl1641989346223.png", record_pos=(0.339, 0.147), resolution=(1440, 810)))
+            touch(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
         sleep(1.5)
     
     # 处理挑战失败的情况
@@ -320,17 +319,14 @@ class EventStrategy(Strategy):
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
         touch(checkButtonPosition)
-        sleep(1.0)
-        # 进到干员选择界面时，退出干员选择界面
-        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
-            sleep(1)
-            abandonRecruitment()
-            continue
-        keepTouchIfExist(Template(r"tpl1664621247885.png", record_pos=(-0.004, 0.189), resolution=(2376, 1152)))
+        sleep(3.0)
+        abandonRecruitment()
+        keepTouchIfExist(Template(r"tpl1664870289838.png", record_pos=(-0.003, 0.231), resolution=(1440, 810)))
         sleep(4.0)
         # 备用截图
 #         keepTouchIfExist(Template(r"tpl1664717830775.png", record_pos=(0.003, 0.09), resolution=(1440, 810)))
         touch(targetPositions['最下面选项的位置'])
+        abandonRecruitment()
         keepTouchIfExist(Template(r"tpl1664611682194.png", record_pos=(0.001, 0.19), resolution=(2376, 1152)))
         sleep(3.0)
         return True
@@ -564,7 +560,7 @@ def notEnlistOtherAgents():
 
 # 放弃招募
 def abandonRecruitment():
-    giveUpButton = exists(Template(r"tpl1646271295365.png", threshold=0.9000000000000001, record_pos=(0.277, 0.247), resolution=(1440, 810)))
+    giveUpButton = exists(Template(r"tpl1664873632829.png", record_pos=(0.258, 0.247), resolution=(1440, 810)))
     if not giveUpButton:
         return
     touch(giveUpButton)
@@ -861,7 +857,9 @@ if __name__ == "__main__":
         success = False
         # 不断挑战本轮探索内的关卡, 直到关底或者攻略关卡失败
         while(True):
-            # 确认任务完成提示信息
+            # 先点击一个空白区域，使任务完成提示或线索提示窗口关闭
+            touch(mobilePositionConfig['基础位置配置']['右下角一个没有按钮的位置'])
+            # 确认是否仍存在任务完成提示信息
             confirmationTaskOver(mobilePositionConfig['基础位置配置'])
             # 点击选中本次挑战关卡
             chooseLevel(mobilePositionConfig['关卡按钮的可能位置'])
