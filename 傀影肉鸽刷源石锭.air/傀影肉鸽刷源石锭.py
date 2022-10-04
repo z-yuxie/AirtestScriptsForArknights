@@ -234,6 +234,8 @@ class BattleStrategy(Strategy):
         success = self.battleResult()
         if success:
             self.processPass(basePositions)
+            self.acceptRewards()
+            self.leaveRewardInterface(basePositions)
         else:
             self.processFail()
         return success
@@ -258,16 +260,21 @@ class BattleStrategy(Strategy):
         while exists(Template(r"tpl1641989217172.png", record_pos=(-0.366, 0.15), resolution=(1440, 810))):
             touch(screenCenter)
             sleep(1)
-        sleep(1.0)
-        
+            continue
+        return
+    
+    # 接收奖励
+    def acceptRewards(self):
         keepTouchIfExist(Template(r"tpl1653115016616.png", record_pos=(-0.354, 0.015), resolution=(2242, 1080)))
         keepTouchIfExist(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152)))
         # 判断是否进入到剧目
         keepTouchIfExist(Template(r"tpl1658591469967.png", record_pos=(-0.001, 0.23), resolution=(1440, 810)))
         # 不小心进到干员选择界面时，退出干员选择界面
-        while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
-            sleep(1)
-            abandonRecruitment()
+        abandonRecruitment()
+            
+    
+    # 离开奖励结算页
+    def leaveRewardInterface(self, basePositions):
         allAccept = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         if not allAccept:
@@ -279,7 +286,7 @@ class BattleStrategy(Strategy):
             else:
                 touch(exitButtonPosition)#判断到了就点它
             sleep(0.5)
-            touch(Template(r"tpl1641989346223.png", record_pos=(0.339, 0.147), resolution=(1440, 810)))
+            touch(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
         sleep(1.5)
     
     # 处理挑战失败的情况
@@ -306,6 +313,14 @@ class EventStrategy(Strategy):
         sleep(4.0)
         touch(screenCenter)
         sleep(3.0)
+        # 首先点击最下面的选项
+        self.clickBottomOption(targetPositions)
+        # 接收奖励
+        self.acceptRewards(targetPositions)
+        return True
+    
+    # 第一次尝试点击最底部的选项
+    def clickBottomOption(self, targetPositions):
         touchPosition = targetPositions['最下面选项的位置']
         checkButtonPosition = exists(Template(r"tpl1664796419044.png", record_pos=(0.433, 0.128), resolution=(1440, 810)))
         while not checkButtonPosition:
@@ -314,6 +329,9 @@ class EventStrategy(Strategy):
             checkButtonPosition = exists(Template(r"tpl1664796419044.png", record_pos=(0.433, 0.128), resolution=(1440, 810)))
         touch(checkButtonPosition)
         sleep(1)
+    
+    # 接收奖励
+    def acceptRewards(self, targetPositions):
         # 进到干员选择界面时，退出干员选择界面
         while exists(Template(r"tpl1658588032413.png", record_pos=(0.405, 0.246), resolution=(1440, 810))):
             sleep(1)
@@ -323,7 +341,6 @@ class EventStrategy(Strategy):
         sleep(4.0)
         keepTouchIfExist(Template(r"tpl1641987578489.png", record_pos=(0.0, 0.232), resolution=(1440, 810)))
         sleep(3.0)
-        return True
 
 # 商店关卡攻略模板
 class StoreStrategy(Strategy):
@@ -542,19 +559,44 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
 # 不招募其他干员
 def notEnlistOtherAgents():
     for i in range(2):  
-        touch(Template(r"tpl1646060523902.png", threshold=0.9000000000000001, record_pos=(-0.001, 0.145), resolution=(1440, 810)))
+        touch(Template(r"tpl1664889571251.png", record_pos=(-0.001, 0.133), resolution=(1440, 810)))
         sleep(1)
         abandonRecruitment()
 
 # 放弃招募
 def abandonRecruitment():
-    giveUpButton = exists(Template(r"tpl1646271295365.png", threshold=0.9000000000000001, record_pos=(0.277, 0.247), resolution=(1440, 810)))
+    giveUpButton = exists(Template(r"tpl1664873632829.png", record_pos=(0.258, 0.247), resolution=(1440, 810)))
     if not giveUpButton:
         return
     touch(giveUpButton)
     sleep(0.5)
     touch(Template(r"tpl1646271313530.png", threshold=0.9000000000000001, record_pos=(0.157, 0.106), resolution=(1440, 810)))
     sleep(1.0)
+
+# 关闭每日弹窗    
+def closeDailyWindow():
+    keepTouchIfExist(Template(r"tpl1664892482650.png", record_pos=(0.438, -0.222), resolution=(1440, 810)))
+#     keepTouchIfExist(Template(r"tpl1664889793690.png", record_pos=(0.439, -0.223), resolution=(1440, 810)))
+#     keepTouchIfExist(Template(r"tpl1664889839151.png", record_pos=(0.474, -0.204), resolution=(1440, 810)))
+#     keepTouchIfExist(Template(r"tpl1664889887133.png", record_pos=(0.465, -0.237), resolution=(1440, 810)))
+    
+# 从主界面进入到肉鸽主界面
+def goToRoguelike():
+    terminalPosition = exists(Template(r"tpl1664890180985.png", record_pos=(0.256, -0.142), resolution=(1440, 810)))
+    if not terminalPosition:
+        return
+    touch(terminalPosition)
+    integrationStrategyButtonPosition = exists(Template(r"tpl1664890304795.png", record_pos=(0.312, 0.242), resolution=(1440, 810)))
+    if not integrationStrategyButtonPosition:
+        print('没有找到集成战略按钮！')
+        return
+    touch(integrationStrategyButtonPosition)
+    thisRoguelikeText = exists(Template(r"tpl1664901993167.png", record_pos=(-0.365, -0.169), resolution=(1440, 810)))
+    if not thisRoguelikeText:
+        print('该肉鸽未开启！')
+        return
+    touch(thisRoguelikeText)
+    keepTouchIfExist(Template(r"tpl1664901975225.png", record_pos=(0.36, 0.132), resolution=(1440, 810)))
         
 # 确认进入古堡
 def confirmEnterCastle():
@@ -610,11 +652,6 @@ def tryChallenge(strategy, agent, mobilePositionConfig):
         targetPositions = mobilePositionConfig[EventStrategy.targetType]
     return strategy.challenge(agent, mobilePositionConfig['基础位置配置'], targetPositions)
 
-# 确认任务完成提示
-def confirmationTaskOver():
-    keepTouchIfExist(Template(r"tpl1664629696929.png", record_pos=(0.01, -0.051), resolution=(2376, 1152)))
-
-
 # 退出本轮探索
 def exitExploration(basePositions):
     while not exists(Template(r"tpl1653449983336.png", record_pos=(-0.472, -0.211), resolution=(2376, 1152))):
@@ -623,11 +660,18 @@ def exitExploration(basePositions):
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
         touch(screenCenter)
         sleep(1.0)
+
+# 放弃本轮探索
+def abandonExploration():
+    if not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
+        return False
     keepTouchIfExist(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810)))
     while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
         sleep(1.0)
+        continue
     touch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
-
+    return True
+    
 # 结算探索收益
 def settlementExplorationIncome():
     sleep(3.0)
@@ -815,9 +859,20 @@ if __name__ == "__main__":
         
     # 调试助战
 #     tryEnlistAgentFromMogul(agents, mobilePositionConfig['基础位置配置']['右滑屏幕起始点'])
-    
+
+
+    incomeToBeSettled = False
+    success = True
     # 死循环，持续挑战不停歇
     while(True):
+        # 从游戏主界面到肉鸽主界面
+        closeDailyWindow()
+        goToRoguelike()
+        # 结束本轮探索并结算本轮探索收益
+        if success:
+            incomeToBeSettled = abandonExploration()
+        if incomeToBeSettled:
+            settlementExplorationIncome()
         # 确认进行探索
         confirmExploration(mobilePositionConfig['基础位置配置'])
         # 进入古堡前的准备，选出一位探索古堡的勇士干员
@@ -834,11 +889,8 @@ if __name__ == "__main__":
         # 将勇士加入探索编队
         organizeIntoTeams(warrior, mobilePositionConfig['基础位置配置'])
         print('干员编队完成，即将出发！')
-        success = False
         # 不断挑战本轮探索内的关卡, 直到关底或者攻略关卡失败
         while(True):
-            # 确认任务完成提示信息
-            confirmationTaskOver()
             # 点击选中本次挑战关卡
             chooseLevel(mobilePositionConfig['关卡按钮的可能位置'])
             # 查找关卡攻略
@@ -857,8 +909,8 @@ if __name__ == "__main__":
         if success:
             # 退出本轮探索
             exitExploration(mobilePositionConfig['基础位置配置'])
-        # 结束本轮探索并结算本轮探索收益
-        settlementExplorationIncome()
+        incomeToBeSettled = True
+        continue
 
 
 

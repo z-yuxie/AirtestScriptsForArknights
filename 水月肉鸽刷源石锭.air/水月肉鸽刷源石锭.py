@@ -237,6 +237,8 @@ class BattleStrategy(Strategy):
         success = self.battleResult()
         if success:
             self.processPass(basePositions)
+            self.acceptRewards()
+            self.leaveRewardInterface(basePositions)
         else:
             self.processFail()
         return success
@@ -261,23 +263,31 @@ class BattleStrategy(Strategy):
         while exists(Template(r"tpl1641989217172.png", record_pos=(-0.366, 0.15), resolution=(1440, 810))):
             touch(screenCenter)
             sleep(1)
-        sleep(1.0)
-        
+            continue
+        return
+    
+    # 接收奖励
+    def acceptRewards(self):
         keepTouchIfExist(Template(r"tpl1653115016616.png", record_pos=(-0.354, 0.015), resolution=(2242, 1080)))
         keepTouchIfExist(Template(r"tpl1653449660653.png", record_pos=(-0.395, 0.12), resolution=(2376, 1152)))
         keepTouchIfExist(Template(r"tpl1664621606838.png", record_pos=(-0.398, 0.107), resolution=(2376, 1152)))
         # 判断是否误点宝箱
-#         keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
+        keepTouchIfExist(Template(r"tpl1664619565045.png", record_pos=(0.212, -0.011), resolution=(2376, 1152)))
         # 不小心进到干员选择界面时，退出干员选择界面
         abandonRecruitment()
+        
+    # 离开奖励结算页
+    def leaveRewardInterface(self, basePositions):
         allAccept = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         if not allAccept:
             #判断有没有这个图片
+            checkCount = 0
             exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
-            while not exitButtonPosition:
+            while (not exitButtonPosition) and checkCount < 10 :
                 swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
                 exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
+                checkCount = checkCount + 1
             else:
                 touch(exitButtonPosition)#判断到了就点它
             sleep(0.5)
@@ -310,14 +320,42 @@ class EventStrategy(Strategy):
         checkKey()
         touch(screenCenter)
         sleep(3.0)
+        # 首先点击最下面的选项
+        self.clickBottomOption(targetPositions)
+        # 检查是否存在需要确认的子选项
+        self.check4SubOption()
+        # 接收奖励
+        self.acceptRewards(targetPositions)
+        return True
+    
+    # 第一次尝试点击最底部的选项
+    def clickBottomOption(self, targetPositions):
         touchPosition = targetPositions['最下面选项的位置']
+        checkCount = 0
         checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
-        while not checkButtonPosition:
+        while (not checkButtonPosition) and checkCount < 10:
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
+            checkCount = checkCount + 1
+            continue
         touch(checkButtonPosition)
         sleep(3.0)
+    
+    # 检查是否存在子选项需要确认
+    def check4SubOption(self):
+        # 这个图标的位置很关键
+        checkButtonPosition = exists(Template(r"tpl1664896744759.png", record_pos=(0.43, -0.04), resolution=(1440, 810)))
+        if not checkButtonPosition:
+            return
+        # 第一次点击该图标后，会出现确认按钮，并且确认按钮刚好在该图标原来的位置，所以点2次就可以完成确认
+        touch(checkButtonPosition)
+        sleep(0.5)
+        touch(checkButtonPosition)
+        sleep(3.0)
+    
+    # 接收奖励
+    def acceptRewards(self, targetPositions):
         abandonRecruitment()
         keepTouchIfExist(Template(r"tpl1664870289838.png", record_pos=(-0.003, 0.231), resolution=(1440, 810)))
         sleep(4.0)
@@ -327,7 +365,6 @@ class EventStrategy(Strategy):
         abandonRecruitment()
         keepTouchIfExist(Template(r"tpl1664611682194.png", record_pos=(0.001, 0.19), resolution=(2376, 1152)))
         sleep(3.0)
-        return True
 
 # 商店关卡攻略模板
 class StoreStrategy(Strategy):
@@ -447,7 +484,6 @@ def acceptInitCollection():
 def chooseHow2Explore(basePositions):
     teamTypeImg = teamTypeMap[teamType]
     while not exists(teamTypeImg):
-        #精二高级的山比较稳定过关，所以选了这个分队'''
         swipe2Right(basePositions['右滑屏幕起始点'])
     else:
         firstTeamTypePosition = exists(Template(r"tpl1664716097925.png", record_pos=(0.11, -0.005), resolution=(1440, 810)))
@@ -552,7 +588,7 @@ def tryEnlistAgentFromMogul(agents, swipeAgentListStartPosition):
 # 不招募其他干员
 def notEnlistOtherAgents():
     for i in range(2):  
-        touch(Template(r"tpl1646060523902.png", threshold=0.9000000000000001, record_pos=(-0.001, 0.145), resolution=(1440, 810)))
+        touch(Template(r"tpl1664889571251.png", record_pos=(-0.001, 0.133), resolution=(1440, 810)))
         sleep(1)
         abandonRecruitment()
 
@@ -565,7 +601,32 @@ def abandonRecruitment():
     sleep(0.5)
     touch(Template(r"tpl1646271313530.png", threshold=0.9000000000000001, record_pos=(0.157, 0.106), resolution=(1440, 810)))
     sleep(1.0)
-        
+
+# 关闭每日弹窗    
+def closeDailyWindow():
+    keepTouchIfExist(Template(r"tpl1664892482650.png", record_pos=(0.438, -0.222), resolution=(1440, 810)))
+#     keepTouchIfExist(Template(r"tpl1664889793690.png", record_pos=(0.439, -0.223), resolution=(1440, 810)))
+#     keepTouchIfExist(Template(r"tpl1664889839151.png", record_pos=(0.474, -0.204), resolution=(1440, 810)))
+#     keepTouchIfExist(Template(r"tpl1664889887133.png", record_pos=(0.465, -0.237), resolution=(1440, 810)))
+    
+# 从主界面进入到肉鸽主界面
+def goToRoguelike():
+    terminalPosition = exists(Template(r"tpl1664890180985.png", record_pos=(0.256, -0.142), resolution=(1440, 810)))
+    if not terminalPosition:
+        return
+    touch(terminalPosition)
+    integrationStrategyButtonPosition = exists(Template(r"tpl1664890304795.png", record_pos=(0.312, 0.242), resolution=(1440, 810)))
+    if not integrationStrategyButtonPosition:
+        print('没有找到集成战略按钮！')
+        return
+    touch(integrationStrategyButtonPosition)
+    thisRoguelikeText = exists(Template(r"tpl1664890533058.png", record_pos=(-0.365, -0.013), resolution=(1440, 810)))
+    if not thisRoguelikeText:
+        print('该肉鸽未开启！')
+        return
+    touch(thisRoguelikeText)
+    keepTouchIfExist(Template(r"tpl1664890621279.png", record_pos=(0.362, 0.131), resolution=(1440, 810)))
+    
 # 确认进入古堡
 def confirmEnterCastle():
     touch(Template(r"tpl1664611951133.png", record_pos=(0.441, -0.008), resolution=(2376, 1152)))
@@ -648,11 +709,17 @@ def exitExploration(basePositions):
         touch(screenCenter)
         sleep(1.0)
         continue
+    
+# 放弃本轮探索
+def abandonExploration():
+    if not exists(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152))):
+        return False
     keepTouchIfExist(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152)))
     while not exists(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810))):
         sleep(1.0)
         continue
     touch(Template(r"tpl1641990587770.png", record_pos=(0.159, 0.106), resolution=(1440, 810)))
+    return True
 
 # 结算探索收益
 def settlementExplorationIncome():
@@ -833,9 +900,23 @@ if __name__ == "__main__":
         
     # 调试助战
 #     tryEnlistAgentFromMogul(agents, mobilePositionConfig['基础位置配置']['右滑屏幕起始点'])
+    # 测试关闭每日弹窗
+#     closeDailyWindow()
+    # 测试从游戏主界面到肉鸽主界面
+#     goToRoguelike()
     
+    incomeToBeSettled = False
+    success = True
     # 死循环，持续挑战不停歇
     while(True):
+        # 从游戏主界面到肉鸽主界面
+        closeDailyWindow()
+        goToRoguelike()
+        # 结束本轮探索并结算本轮探索收益
+        if success:
+            incomeToBeSettled = abandonExploration()
+        if incomeToBeSettled:
+            settlementExplorationIncome()
         # 确认进行探索
         confirmExploration(mobilePositionConfig['基础位置配置'])
         # 进入古堡前的准备，选出一位探索古堡的勇士干员
@@ -852,7 +933,6 @@ if __name__ == "__main__":
         # 将勇士加入探索编队
         organizeIntoTeams(warrior, mobilePositionConfig['基础位置配置'])
         print('干员编队完成，即将出发！')
-        success = False
         # 不断挑战本轮探索内的关卡, 直到关底或者攻略关卡失败
         while(True):
             # 先点击一个空白区域，使任务完成提示或线索提示窗口关闭
@@ -872,13 +952,13 @@ if __name__ == "__main__":
             # 攻略关卡
             success = tryChallenge(strategy, warrior, mobilePositionConfig)
             # 是否挑战失败或已经挑战到关底
-            if not success or strategy.isLastTargetStrategy():
+            if (not success) or strategy.isLastTargetStrategy():
                 break
         if success:
             # 退出本轮探索
             exitExploration(mobilePositionConfig['基础位置配置'])
-        # 结束本轮探索并结算本轮探索收益
-        settlementExplorationIncome()
+        incomeToBeSettled = True
+        continue
 
 
 
