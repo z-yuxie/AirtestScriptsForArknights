@@ -235,7 +235,8 @@ class BattleStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        sleep(1.0)
+        if not exists(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152))):
+            return False
         keepTouchIfExist(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152)))
         sleep(1.0)
         touch(Template(r"tpl1641988492692.png", record_pos=(0.322, 0.242), resolution=(1440, 810)))
@@ -300,17 +301,20 @@ class BattleStrategy(Strategy):
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         if not allAccept:
             #判断有没有这个图片
-            checkCount = 0
             exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
-            while (not exitButtonPosition) and checkCount < 10 :
+            for i in range(10):
+                if exitButtonPosition:
+                    break
                 swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
                 exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
-                checkCount = checkCount + 1
-            else:
-                touch(exitButtonPosition)#判断到了就点它
+                if i < 10:
+                    continue
+                return False
+            touch(exitButtonPosition)#判断到了就点它
             sleep(0.5)
-            touch(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
+            tryTouch(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
         sleep(1.5)
+        return True
     
     # 处理挑战失败的情况
     def processFail(self):
@@ -332,7 +336,8 @@ class EventStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        sleep(1.0)
+        if not exists(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152))):
+            return False
         keepTouchIfExist(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
         sleep(4.0)
         checkKey()
@@ -351,7 +356,6 @@ class EventStrategy(Strategy):
     # 第一次尝试点击最底部的选项
     def clickBottomOption(self, targetPositions):
         touchPosition = targetPositions['最下面选项的位置']
-        checkCount = 0
         checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
         for i in range(10):
             if checkButtonPosition:
@@ -359,7 +363,6 @@ class EventStrategy(Strategy):
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
-            checkCount = checkCount + 1
             if i < 10:
                 continue
             return False
@@ -404,7 +407,8 @@ class StoreStrategy(Strategy):
     # 攻略关卡
     # 参与攻略的干员, 基础性坐标信息, 关卡特定坐标信息
     def challenge(self, agent, basePositions, targetPositions):
-        sleep(1.0)
+        if not exists(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152))):
+            return False
         keepTouchIfExist(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152)))
         sleep(1.0)
         # 不可以投资时直接离开
@@ -985,7 +989,7 @@ if __name__ == "__main__":
                 print('匹配到的关卡：' + strategy.targetName)
             else:
                 print('关卡匹配失败！退出本轮探索')
-                success = True
+                success = False
                 break
             # 攻略关卡
             success = tryChallenge(strategy, warrior, mobilePositionConfig)
