@@ -299,20 +299,28 @@ class BattleStrategy(Strategy):
     def leaveRewardInterface(self, basePositions):
         allAccept = exists(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
         keepTouchIfExist(Template(r"tpl1658591561918.png", record_pos=(-0.001, 0.056), resolution=(1440, 810)))
-        if not allAccept:
-            #判断有没有这个图片
+        if allAccept:
+            sleep(1.5)
+            return True
+        #判断有没有这个图片
+        exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
+        for i in range(10):
+            if exitButtonPosition:
+                break
+            swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
             exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
-            for i in range(10):
-                if exitButtonPosition:
-                    break
-                swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
-                exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
-                if i < 10:
-                    continue
+            if i < 10:
+                continue
+            return False
+        checkButtonPosition = exists(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
+        for i in range(10):
+            if checkButtonPosition:
+                touch(checkButtonPosition)
+            else:
+                touch(exitButtonPosition)
+                checkButtonPosition = exists(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
+            if i >= 10:
                 return False
-            touch(exitButtonPosition)#判断到了就点它
-            sleep(0.5)
-            tryTouch(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
         sleep(1.5)
         return True
     
