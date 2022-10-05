@@ -246,7 +246,7 @@ class BattleStrategy(Strategy):
         sleep(2)
         touch(Template(r"tpl1646126432694.png", threshold=0.9000000000000001, record_pos=(0.362, -0.25), resolution=(1440, 810)))
         sleep(0.5)
-        ait4AgentChallenge = agent.enter(targetPositions)
+        wait4AgentChallenge = agent.enter(targetPositions)
         if wait4AgentChallenge:
             wait4AgentChallenge = agent.releaseSkill(targetPositions['干员站场位置'])
         if wait4AgentChallenge:
@@ -336,7 +336,9 @@ class EventStrategy(Strategy):
         touch(screenCenter)
         sleep(3.0)
         # 首先点击最下面的选项
-        self.clickBottomOption(targetPositions)
+        isSuccess = self.clickBottomOption(targetPositions)
+        if not isSuccess:
+            return isSuccess
         # 接收奖励
         self.acceptRewards(targetPositions)
         return True
@@ -346,13 +348,19 @@ class EventStrategy(Strategy):
         touchPosition = targetPositions['最下面选项的位置']
         checkCount = 0
         checkButtonPosition = exists(Template(r"tpl1664796419044.png", record_pos=(0.433, 0.128), resolution=(1440, 810)))
-        while (not checkButtonPosition) and checkCount < 10:
+        for i in range(10):
+            if checkButtonPosition:
+                break
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664796419044.png", record_pos=(0.433, 0.128), resolution=(1440, 810)))
             checkCount = checkCount + 1
+            if i < 10:
+                continue
+            return False
         touch(checkButtonPosition)
         sleep(1)
+        return True
     
     # 接收奖励
     def acceptRewards(self, targetPositions):
@@ -690,6 +698,12 @@ def exitExploration(basePositions):
     while not exists(Template(r"tpl1641990570636.png", record_pos=(0.412, -0.018), resolution=(1440, 810))):
         touch(screenCenter)
         sleep(1.0)
+        continue
+    return
+    
+# 是否存在退出按钮
+def exitExistsButton():
+    return exists(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
 
 # 放弃本轮探索
 def abandonExploration():
@@ -936,6 +950,9 @@ if __name__ == "__main__":
             # 是否挑战失败或已经挑战到关底
             if not success or strategy.isLastTargetStrategy():
                 break
+        # 不是调整战斗关卡失败导致的中断可以当做成功处理
+        if not success:
+            success = exitExistsButton()
         if success:
             # 退出本轮探索
             exitExploration(mobilePositionConfig['基础位置配置'])

@@ -339,7 +339,9 @@ class EventStrategy(Strategy):
         touch(screenCenter)
         sleep(3.0)
         # 首先点击最下面的选项
-        self.clickBottomOption(targetPositions)
+        isSuccess = self.clickBottomOption(targetPositions)
+        if not isSuccess:
+            return isSuccess
         # 检查是否存在需要确认的子选项
         self.check4SubOption()
         # 接收奖励
@@ -351,14 +353,19 @@ class EventStrategy(Strategy):
         touchPosition = targetPositions['最下面选项的位置']
         checkCount = 0
         checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
-        while (not checkButtonPosition) and checkCount < 10:
+        for i in range(10):
+            if checkButtonPosition:
+                break
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
             checkCount = checkCount + 1
-            continue
+            if i < 10:
+                continue
+            return False
         touch(checkButtonPosition)
         sleep(3.0)
+        return True
     
     # 检查是否存在子选项需要确认
     def check4SubOption(self):
@@ -735,7 +742,12 @@ def exitExploration(basePositions):
         touch(screenCenter)
         sleep(1.0)
         continue
+    return
     
+# 是否存在退出按钮
+def exitExistsButton():
+    return exists(Template(r"tpl1664719397566.png", record_pos=(-0.466, -0.255), resolution=(1440, 810)))
+
 # 放弃本轮探索
 def abandonExploration():
     if not exists(Template(r"tpl1664611092634.png", record_pos=(0.423, -0.03), resolution=(2376, 1152))):
@@ -895,9 +907,9 @@ strategies = (
     BattleStrategy('虫群横行', Template(r"tpl1664615121123.png", record_pos=(0.326, -0.102), resolution=(2376, 1152))),
     BattleStrategy('共生', Template(r"tpl1664285540176.png", record_pos=(0.262, -0.126), resolution=(1440, 810))),
     BattleStrategy('蓄水池', Template(r"tpl1664285203156.png", record_pos=(0.264, -0.125), resolution=(1440, 810))),
-    EventStrategy('幕间余兴', Template(r"tpl1664795831488.png", record_pos=(0.24, -0.128), resolution=(1440, 810))),
-    EventStrategy('幕间余兴', Template(r"tpl1664799167543.png", record_pos=(0.283, -0.106), resolution=(2376, 1152))),
-    EventStrategy('幕间余兴', Template(r"tpl1664544319322.png", record_pos=(0.292, -0.129), resolution=(1440, 810)))
+    EventStrategy('地区委托', Template(r"tpl1664795831488.png", record_pos=(0.24, -0.128), resolution=(1440, 810))),
+    EventStrategy('得偿所愿', Template(r"tpl1664799167543.png", record_pos=(0.283, -0.106), resolution=(2376, 1152))),
+    EventStrategy('兴致盎然', Template(r"tpl1664544319322.png", record_pos=(0.292, -0.129), resolution=(1440, 810)))
 )
 
 # 可选分队配置
@@ -980,6 +992,9 @@ if __name__ == "__main__":
             # 是否挑战失败或已经挑战到关底
             if (not success) or strategy.isLastTargetStrategy():
                 break
+        # 不是调整战斗关卡失败导致的中断可以当做成功处理
+        if not success:
+            success = exitExistsButton()
         if success:
             # 退出本轮探索
             exitExploration(mobilePositionConfig['基础位置配置'])
