@@ -59,7 +59,7 @@ def keepTouchIfExist(img):
 # -- 干员类型模板 --
 # 基础干员模板
 class Agent:
-    '基础干员-只是一个模板啦-不要直接使用ta'
+    '基础通用干员-只需要上场就行的那种-也是一个模板'
 
     # 构造函数
     # 干员名称, 招募界面角色标识图, 助战招募界面角色标识图, 立绘标识图, 进队标识图, 进队候选标识图, 选用的技能的标识图, 等待费用的时间(正常情况约0.5秒回1费), 干员在等待上场时的标识, 释放技能时的技能图标
@@ -134,22 +134,30 @@ class Agent:
             sleep(self.wait4Cost)
         # 如果没有识别到待上场的干员的坐标，则循环多次检测
         positionInTeam = exists(self.wait4EnterMark)
-        while not positionInTeam:
+        for i in range(10):
+            if positionInTeam:
+                break
             sleep(0.5)
             positionInTeam = exists(self.wait4EnterMark)
-            continue
+            if i < 10:
+                continue
+            return False
         # 尝试让干员上场战斗，如果上场失败会进行重试
-        while(positionInTeam):
+        for i in range(10):
+            if (not positionInTeam):
+                break
             swipe(positionInTeam, targetPositions['干员上场位置'], duration = 1.5)
             sleep(0.5)
             swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
             positionInTeam = exists(self.wait4EnterMark)
-            continue
-        return
+            if i < 10:
+                continue
+            return False
+        return True
 
     # 基础干员默认不需要开技能
     def releaseSkill(self, agentPosition):
-        return
+        return True
 
 # 上场后需要开技能的干员
 class NeedOpenSkillAgent(Agent):
@@ -161,16 +169,22 @@ class NeedOpenSkillAgent(Agent):
         while not exists(Template(r"tpl1664729470691.png", record_pos=(0.258, -0.041), resolution=(1440, 810))):
             # 等待技能时间最长不超过3分钟，否则退出技能释放判定，避免干员在开技能之前就挂掉后导致脚本卡住
             if sleep_time >= 50:
-                return
+                return False
             sleep(1)
             sleep_time = sleep_time + 1
         skillMarkPosition = exists(self.skillMark4Release)
+        checkCount = 0
         while not skillMarkPosition:
+            if checkCount >= 10:
+                print('释放技能失败！')
+                return False
             touch(agentPosition)
             sleep(1)
             skillMarkPosition = exists(self.skillMark4Release)
+            checkCount = checkCount + 1
             continue
         touch(skillMarkPosition)
+        return True
 
 # -- 关卡攻略类型模板 --
 # 基础关卡攻略模板
@@ -226,14 +240,18 @@ class BattleStrategy(Strategy):
         sleep(1.0)
         touch(Template(r"tpl1641988492692.png", record_pos=(0.322, 0.242), resolution=(1440, 810)))
         checkKey()
-        while not exists(Template(r"tpl1646226625337.png", threshold=0.9000000000000001, record_pos=(0.044, -0.258), resolution=(1440, 810))):
+        for i in range(10):
+            if exists(Template(r"tpl1646226625337.png", threshold=0.9000000000000001, record_pos=(0.044, -0.258), resolution=(1440, 810))):
+                break
             sleep(1)
         sleep(2)
         touch(Template(r"tpl1646126432694.png", threshold=0.9000000000000001, record_pos=(0.362, -0.25), resolution=(1440, 810)))
         sleep(0.5)
-        agent.enter(targetPositions)
-        agent.releaseSkill(targetPositions['干员站场位置'])
-        sleep(50)
+        wait4AgentChallenge = agent.enter(targetPositions)
+        if wait4AgentChallenge:
+            wait4AgentChallenge = agent.releaseSkill(targetPositions['干员站场位置'])
+        if wait4AgentChallenge:
+            sleep(50)
         success = self.battleResult()
         if success:
             self.processPass(basePositions)
@@ -483,19 +501,23 @@ def acceptInitCollection():
 # 选择探索策略
 def chooseHow2Explore(basePositions):
     teamTypeImg = teamTypeMap[teamType]
+    # 初始招募券类型截图，下面3种截图，自己哪个识别率高用哪个
+    firstRecruitmentVoucher = Template(r"tpl1664716097925.png", record_pos=(0.11, -0.005), resolution=(1440, 810))
+#     firstRecruitmentVoucher = Template(r"tpl1664948707304.png", record_pos=(0.11, 0.081), resolution=(1440, 810))
+#     firstRecruitmentVoucher = Template(r"tpl1664948718882.png", record_pos=(0.109, 0.104), resolution=(1440, 810))
     while not exists(teamTypeImg):
         swipe2Right(basePositions['右滑屏幕起始点'])
     else:
-        firstTeamTypePosition = exists(Template(r"tpl1664716097925.png", record_pos=(0.11, -0.005), resolution=(1440, 810)))
-        while (not firstTeamTypePosition):
+        firstRecruitmentVoucherPosition = exists(firstRecruitmentVoucher)
+        while (not firstRecruitmentVoucherPosition):
             tryTouch(teamTypeImg)
             #有需要的就把这两个突击战术分队的图片换成自己想要的分队吧，用左侧Airtest辅助窗里的功能就可以截图生成自己的代码了。'''
             sleep(1.0)
             tryTouch(Template(r"tpl1664715871333.png", record_pos=(0.265, 0.178), resolution=(1440, 810)))
             sleep(1.0)
-            firstTeamTypePosition = exists(Template(r"tpl1664716097925.png", record_pos=(0.11, -0.005), resolution=(1440, 810)))
+            firstRecruitmentVoucherPosition = exists(firstRecruitmentVoucher)
             
-    touch(firstTeamTypePosition)
+    touch(firstRecruitmentVoucherPosition)
     sleep(1.0)
     touch(Template(r"tpl1664715887145.png", record_pos=(0.11, 0.176), resolution=(1440, 810)))
     sleep(2.0)
@@ -504,6 +526,9 @@ def chooseHow2Explore(basePositions):
 def chooseSaberAgent(agents, swipeAgentListStartPosition):
     #点击近卫招募券
     touch(Template(r"tpl1664716166233.png", record_pos=(-0.233, -0.084), resolution=(1440, 810)))
+#     touch(Template(r"tpl1664948776009.png", record_pos=(-0.231, -0.004), resolution=(1440, 810)))
+#     touch(Template(r"tpl1664948788917.png", record_pos=(-0.256, -0.004), resolution=(1440, 810)))
+#     touch(Template(r"tpl1664948799626.png", record_pos=(-0.227, 0.012), resolution=(1440, 810)))
     sleep(1.0)
     # 自己没有干员的情况下，直接进行助战招募
     if onlyAssist:
@@ -659,6 +684,7 @@ def chooseLevel(levelButtonPositions):
         touch(position)
         if fastMatchStrategy:
             continue
+        # 如果经常出现关卡没选上的情况，就关闭快速关卡匹配模式，走下面的校验
         if exists(Template(r"tpl1664611435029.png", record_pos=(0.407, 0.088), resolution=(2376, 1152))) or exists(Template(r"tpl1664611277007.png", record_pos=(0.399, 0.096), resolution=(2376, 1152))):
             break
 
