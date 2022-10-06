@@ -371,7 +371,7 @@ class EventStrategy(Strategy):
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
-            if i < < 9:
+            if i < 9:
                 continue
             return False
         touch(checkButtonPosition)
