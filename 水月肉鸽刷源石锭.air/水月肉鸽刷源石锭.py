@@ -139,7 +139,7 @@ class Agent:
                 break
             sleep(0.5)
             positionInTeam = exists(self.wait4EnterMark)
-            if i < 10:
+            if i < 9:
                 continue
             return False
         # 尝试让干员上场战斗，如果上场失败会进行重试
@@ -150,7 +150,7 @@ class Agent:
             sleep(0.5)
             swipe(targetPositions['干员上场位置'], targetPositions['干员朝向位置'], duration = 0.5)
             positionInTeam = exists(self.wait4EnterMark)
-            if i < 10:
+            if i < 9:
                 continue
             return False
         return True
@@ -309,16 +309,16 @@ class BattleStrategy(Strategy):
                 break
             swipe2Right(basePositions['右滑屏幕起始点'])#判断没有，就自右往左滑动屏幕，移到右边，移完回去继续判断图片
             exitButtonPosition = exists(Template(r"tpl1664870198731.png", record_pos=(-0.138, -0.019), resolution=(1440, 810)))
-            if i < 10:
+            if i < 9:
                 continue
             return False
-        checkButtonPosition = exists(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
+        checkButtonPosition = exists(Template(r"tpl1664959858400.png", record_pos=(-0.099, 0.136), resolution=(1440, 810)))
         for i in range(10):
             if checkButtonPosition:
                 touch(checkButtonPosition)
             else:
                 touch(exitButtonPosition)
-                checkButtonPosition = exists(Template(r"tpl1664870174063.png", record_pos=(-0.099, 0.137), resolution=(1440, 810)))
+                checkButtonPosition = exists(Template(r"tpl1664959858400.png", record_pos=(-0.099, 0.136), resolution=(1440, 810)))
             if i >= 10:
                 return False
         sleep(1.5)
@@ -371,7 +371,7 @@ class EventStrategy(Strategy):
             touch(touchPosition)
             touchPosition = (touchPosition[0], touchPosition[1] - 130)
             checkButtonPosition = exists(Template(r"tpl1664788021236.png", record_pos=(0.432, 0.079), resolution=(1440, 810)))
-            if i < 10:
+            if i < < 9:
                 continue
             return False
         touch(checkButtonPosition)
